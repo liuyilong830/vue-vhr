@@ -1,0 +1,5 @@
+/**
+ * 该文件存放所有 vuex 中的 mutation 文件中所有的方法名的字符串常量
+ */
+export const LOGIN = 'login'
+export const CLOSETPATH = 'closetpath'

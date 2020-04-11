@@ -1,23 +1,29 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+import Login from "../views/login/Login";
+import Home from 'views/home/Home'
+import BaseInfo from "../views/home/child/BaseInfo";
+import SeniorInfo from "../views/home/child/SeniorInfo";
+import TeaRewPunish from "../views/teacher/TeaRewPunish";
+import TeaTrain from "../views/teacher/TeaTrain";
+import TeaTransfer from "../views/teacher/TeaTransfer";
+import HomePage from "../views/home/HomePage";
 
 Vue.use(VueRouter)
 
-  const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+const routes = [
+  { path: '/', redirect: '/login'},
+  { path: '/login', component: Login },
+  { path: '/home', component: Home, children: [
+    { path: '/home', redirect: 'index'},
+    { path: 'index', component: HomePage},
+    { path: 'stuBaseInfo', component: BaseInfo},
+    { path: 'stuSeniorInfo', component: SeniorInfo},
+    { path: 'teaRewPunish', component: TeaRewPunish},
+    { path: 'teaTrain', component: TeaTrain},
+    { path: 'teaTransfer', component: TeaTransfer}
+  ]}
 ]
 
 const router = new VueRouter({
