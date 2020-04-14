@@ -6,7 +6,7 @@
       </el-header>
       <el-container class="main">
         <el-aside width="250px">
-          <my-nav-menu :listArr="listArr" @setHistory="setHistory"></my-nav-menu>
+          <my-nav-menu :listArr="changeArr" @setHistory="setHistory"></my-nav-menu>
         </el-aside>
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right" class="el-breadcrumb">
@@ -33,6 +33,7 @@
     Breadcrumb,
     BreadcrumbItem
   } from 'element-ui'
+  import {mapState} from "vuex";
   
   import MyHeader from 'components/comment/my-header/MyHeader'
   import MyNavMenu from "components/content/my-nav-menu/MyNavMenu"
@@ -50,21 +51,68 @@
     },
     data() {
       return {
-        listArr: [
-          {title: '学生资料', class: 'el-icon-location', path: '/home/stuInfo', child: [
-            {title: '基本资料', class: '', path: '/home/stuBaseInfo', child: []},
-            {title: '高级资料', class: '', path: '/home/stuSeniorInfo', child: []}
+        teaArr: [
+          {title: '学生管理', class: 'el-icon-location', path: '/home/stuInfo', child: [
+            {title: '班级学生信息', class: '', path: '/home/teastusinfo', child: []},
           ]},
           {title: '教师管理', class: 'el-icon-menu', path: '/home/teaInfo', child: [
-            {title: '学生奖惩', class: '', path: '/home/teaRewPunish', child: []},
-            {title: '学生培训', class: '', path: '/home/teaTrain', child: []},
-            {title: '学生调动', class: '', path: '/home/teaTransfer', child: []},
+            {title: '教师个人信息', class: '', path: '/home/teacherinfo', child: []},
           ]},
-          {title: '薪资管理', class: 'el-icon-setting', path: '/home/salary', child: []},
-          {title: '统计管理', class: 'el-icon-location', path: '/home/statistics', child: []},
-          {title: '系统管理', class: 'el-icon-location', path: '/home/system', child: []},
+          {title: '课程管理', class: 'el-icon-setting', path: '/home/course', child: [
+            {title: '所有课程', class: '', path: '/home/teaallcourse', child: []},
+          ]},
+          {title: '成绩管理', class: 'el-icon-location', path: '/home/result', child: [
+            {title: '学员成绩', class: '', path: '/home/teastusresult', child: []},
+          ]},
+          {title: '考勤管理', class: 'el-icon-location', path: '/home/assessment', child: [
+            {title: '考勤记录', class: '', path: '/home/teaqueryassessment', child: []},
+          ]},
         ], // 用于展示测边导航栏的数据
+        stuArr: [
+          {title: '学生管理', class: 'el-icon-location', path: '/home/stuInfo', child: [
+            {title: '学员资料', class: '', path: '/home/stuBaseInfo', child: []},
+          ]},
+          {title: '课程管理', class: 'el-icon-menu', path: '/home/course', child: [
+            {title: '学生课程', class: '', path: '/home/stuCourse', child: []},
+          ]},
+          {title: '成绩管理', class: 'el-icon-menu', path: '/home/result', child: [
+            {title: '学生成绩', class: '', path: '/home/stuResult', child: []},
+          ]},
+          {title: '考勤管理', class: 'el-icon-menu', path: '/home/assessment', child: [
+            {title: '学生考勤', class: '', path: '/home/stuAssessment', child: []},
+          ]},
+        ],  // 用于展示学生登录时候的侧边导航栏的数据
+        rootArr: [
+          {title: '学生管理', class: 'el-icon-location', path: '/home/stuInfo', child: [
+            {title: '班级学员资料', class: '', path: '/home/adminstusinfo', child: []},
+          ]},
+          {title: '教师管理', class: 'el-icon-menu', path: '/home/teaInfo', child: [
+            {title: '班级教师信息', class: '', path: '/home/adminteachersInfo', child: []},
+          ]},
+          {title: '课程管理', class: 'el-icon-setting', path: '/home/course', child: [
+            {title: '所有课程信息', class: '', path: '/home/adminallcourse', child: []},
+          ]},
+          {title: '成绩管理', class: 'el-icon-location', path: '/home/result', child: [
+            {title: '所有学员成绩', class: '', path: '/home/adminstusresult', child: []},
+          ]},
+          {title: '考勤管理', class: 'el-icon-menu', path: '/home/assessment', child: [
+            {title: '所有学员考勤', class: '', path: '/home/adminallassessment', child: []},
+          ]},
+        ],  // 用于展示管理员（辅导员登录时候的测边导航栏的数据）
         breadcrumbArr: [{title: '首页', path: '/home/index'}], // 用于存放记录路由跳转顺序的数组
+      }
+    },
+    computed: {
+      ...mapState(['userInfo']),
+      // 动态展示测边栏列表
+      changeArr() {
+        if (this.userInfo.type == 1) {
+          return this.teaArr
+        } else if (this.userInfo.type == 2) {
+          return this.stuArr
+        } else if (this.userInfo.type == 3) {
+          return this.rootArr
+        }
       }
     },
     methods: {
@@ -106,6 +154,9 @@
           this.breadcrumbArr.splice(this.getIndex(val)+1, this.breadcrumbArr.length)
         }
       }
+    },
+    created() {
+    
     }
   }
 </script>

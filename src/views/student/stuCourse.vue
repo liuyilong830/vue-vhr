@@ -1,12 +1,12 @@
 <template>
-  <div class="teacher-train">
-    学员的培训
+  <div class="student-course">
+    学生个人课程
   </div>
 </template>
 
 <script>
   export default {
-    name: 'TeaTrain',
+    name: 'stuCourse',
     components: {},
     data() {
       return {}
@@ -15,7 +15,7 @@
 </script>
 
 <style lang="less" scoped>
-  .teacher-train {
+  .student-course {
   
   }
 </style>

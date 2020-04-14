@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {setMessage} from '../utils/index'
 
 // 创建一个自定义的 axios
 const instance = axios.create({
@@ -14,7 +15,15 @@ instance.interceptors.request.use(config => {
 })
 // 响应拦截器
 instance.interceptors.response.use(response => {
-  return response.data
+  const result = response.data
+  if (result.code === 200) {
+    return result
+  } else {
+    Promise.reject(result).catch((result) => {
+      setMessage(result.message, 'error')
+    })
+    return null
+  }
 }, error => {
   return Promise.reject(error)
 })

@@ -3,5 +3,7 @@
  */
 import {CLOSETPATH} from './mutation-types'
 export default {
-
+  setUserInfo(state, payload) {
+    state.userInfo = {...payload}
+  }
 }

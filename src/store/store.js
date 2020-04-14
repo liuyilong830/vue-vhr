@@ -8,7 +8,7 @@ import getters from "./getters";
 Vue.use(Vuex)
 
 const state = {
-
+  userInfo: {}
 }
 
 export default new Vuex.Store({

@@ -8,7 +8,7 @@
         <div class="form">
           <el-input
             class="public"
-            v-model="username"
+            v-model="userid"
             placeholder="请输入用户名"
             prefix-icon="el-icon-user"
             clearable
@@ -24,7 +24,14 @@
             :maxlength="16"
             @blur="passwordBlur">
           </el-input>
-          <el-checkbox class="public" v-model="checked">是否记住我</el-checkbox>
+          <el-radio-group v-model="type" class="public">
+            <el-radio :label="2">学生</el-radio>
+            <el-radio :label="1">教师</el-radio>
+            <el-radio :label="3">辅导员</el-radio>
+          </el-radio-group>
+          <div class="public">
+            <el-checkbox v-model="checked">是否记住我</el-checkbox>
+          </div>
           <el-row class="public">
             <el-button type="primary" class="length" @click="loginClick">登录</el-button>
           </el-row>
@@ -44,9 +51,14 @@
     Button,
     Row,
     Alert,
+    Radio,
+    RadioGroup,
     Message,
     Notification
   } from 'element-ui'
+  import {mapActions, mapState} from 'vuex'
+  import {reqLogin} from '../../api/index'
+  import {setMessage} from '../../utils/index'
   export default {
     name: 'Login',
     components: {
@@ -55,28 +67,49 @@
       'elButton': Button,
       'elRow': Row,
       'elAlert': Alert,
+      'elRadio': Radio,
+      'elRadioGroup': RadioGroup
     },
     data() {
       return {
-        username: '',
+        userid: '',
         password: "",
-        checked: false
+        checked: false,
+        type: 2 // 1 表示学生登录、2 表示教师登录、3表示辅导员（管理员登录）
       }
     },
     computed: {
+      ...mapState(['userInfo']),
       correctPwd() {
         let reg = /^[a-z0-9\.,\?]{6,16}$/g
         return reg.test(this.password)
+      },
+      testUsername() {
+        if (this.userid === '') {
+          return '用户名不能为空'
+        } else if (this.type == 1) {
+          return this.userid[0] == 1? false : '教师用户名以1开头'
+        } else if (this.type == 2) {
+          return this.userid[0] == 2? false : '学生用户名以2开头'
+        } else {
+          return this.userid == 'root'? false : '辅导员用户名为root'
+        }
       }
     },
     methods: {
-      loginClick() {
-        if (this.username === '') {
-          return this.usernameBlur()
+      ...mapActions(['reqUserInfo']),
+      async loginClick() {
+        if (this.testUsername) {
+          return setMessage(this.testUsername, 'error', 1000)
         }
         if (!this.correctPwd) {
           return this.passwordBlur()
         }
+        if (![parseInt(this.userid)].includes(NaN)) {
+          this.userid = parseInt(this.userid)
+        }
+        console.log(this.userid)
+        await this.reqUserInfo({userid: this.userid, password: this.password, type: this.type})
         this.$router.replace('/home')
         Notification({
           title: '登录成功',
@@ -84,18 +117,9 @@
           type: 'success'
         })
       },
-      usernameBlur() {
-        Message.error({
-          message: '用户名不能为空',
-          duration: 1000
-        })
-      },
       passwordBlur() {
         if(!this.correctPwd) {
-          return Message.error({
-            message: '密码应该由6到16位数字 字母 . , ? 组成的',
-            duration: 1000
-          })
+          return setMessage('密码应该由6到16位数字 字母 . , ? 组成的', 'error', 1000)
         }
       }
     }
