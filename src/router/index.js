@@ -28,7 +28,7 @@ import NotFound from "../components/comment/404/NotFound";
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', redirect: '/login'},
+  { path: '/'},
   { path: '/login', component: Login },
   { path: '/home', component: Home, children: [
     { path: '/home', redirect: 'index'},
@@ -74,6 +74,7 @@ router.beforeEach(async (to, from, next) => {
   }
   if (!userid) {
     await store.dispatch('getStatus')
+    // return next('/home/index')
   }
   next()
 })

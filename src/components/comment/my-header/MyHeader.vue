@@ -44,7 +44,7 @@
       img {
         width: 100%;
         height: 40px;
-        background-color: black;
+        background-color: #ffffff;
       }
     }
     .company {
@@ -69,8 +69,9 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      position: relative;
       img {
-        background-color: black;
+        background-color: #ffffff;
         width: 80%;
         height: 80%;
         border-radius: 50%;

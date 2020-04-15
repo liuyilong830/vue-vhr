@@ -4,14 +4,13 @@
       <el-menu
         :default-active="path"
         class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b"
         :unique-opened="true"
+        :router="true"
         ref="menu">
-        <my-nav-menu-item :list-arr="listArr" v-on="$listeners"></my-nav-menu-item>
+        <my-nav-menu-item :list-arr="listArr"></my-nav-menu-item>
       </el-menu>
     </el-col>
   </div>
@@ -50,10 +49,7 @@
         path: ''
       }
     },
-    methods: {
-      handleOpen(key, keyPath) {},
-      handleClose(key, keyPath) {}
-    },
+    methods: {},
     watch: {
       '$route.path'(val, oldVal) {
         this.path = val

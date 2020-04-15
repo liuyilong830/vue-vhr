@@ -6,9 +6,9 @@
           <i :class="item.class"></i>
           <span>{{item.title}}</span>
         </template>
-        <my-nav-menu-item :list-arr="item.child" v-on="$listeners"></my-nav-menu-item>
+        <my-nav-menu-item :list-arr="item.child"></my-nav-menu-item>
       </el-submenu>
-      <el-menu-item v-else :index="item.path" @click.native="setHistory(item)">
+      <el-menu-item v-else :index="item.path">
         <template slot="title">
           <i :class="item.class"></i>
           <span slot="title">{{item.title}}</span>
@@ -41,13 +41,17 @@
       },
     },
     methods: {
-      setHistory(obj) {
-        this.$emit('setHistory', obj)
-      }
+    
     }
   }
 </script>
 
-<style lang="stylus" scoped>
-
+<style lang="less" scoped>
+  .iconfont {
+    padding-right: 10px;
+    font-size: 18px;
+  }
+  .icon-xuesheng {
+    font-size: 20px;
+  }
 </style>
