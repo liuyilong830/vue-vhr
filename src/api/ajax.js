@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {setMessage} from '../utils/index'
+import router from "../router";
 
 // 创建一个自定义的 axios
 const instance = axios.create({
@@ -18,11 +19,13 @@ instance.interceptors.response.use(response => {
   const result = response.data
   if (result.code === 200) {
     return result
+  } else if (result.code === 401) {
+    return router.replace('/login')
   } else {
+    console.log(router)
     Promise.reject(result).catch((result) => {
       setMessage(result.message, 'error')
     })
-    return null
   }
 }, error => {
   return Promise.reject(error)

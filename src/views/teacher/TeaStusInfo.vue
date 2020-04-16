@@ -1,7 +1,6 @@
 <template>
   <div class="teacher-stus-info">
-    班级学生信息
-    <div class="operation"></div>
+    <operation :user-type="getUserType"></operation>
     <my-table class="my-table"></my-table>
     <div class="flex">
       <el-pagination
@@ -19,20 +18,31 @@
     Pagination
   } from 'element-ui'
   import Table from "../../components/content/table/Table";
+  import Operation from 'components/content/operation/Operation'
+  import {mapGetters} from 'vuex'
+  import {setMessage} from "../../utils";
   export default {
     name: 'TeaStusInfo',
     components: {
       'myTable': Table,
-      'elPagination': Pagination
+      'elPagination': Pagination,
+      Operation,
     },
     data() {
       return {}
     },
+    computed: {
+      ...mapGetters(['getUserInfo']),
+      getUserType() {
+        return this.getUserInfo.type === 3
+      }
+    }
   }
 </script>
 
 <style lang="less" scoped>
   .teacher-stus-info {
+    position: relative;
     .operation {
       height: 60px;
       margin: 15px 0;
@@ -41,8 +51,10 @@
       margin-bottom: 15px;
     }
     .flex {
-      display: flex;
-      justify-content: center;align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -75px;
     }
   }
 </style>

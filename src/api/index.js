@@ -8,3 +8,5 @@ import ajax from "./ajax";
 export const reqLogin = (loginInfo) => ajax('/login', loginInfo, 'post')
 // 获取用户的状态（用户查看是否登录）
 export const reqStatus = () => ajax('/user')
+// 新增学员信息
+export const reqInsertStu = (user) => ajax('/insertStu', user, 'post')

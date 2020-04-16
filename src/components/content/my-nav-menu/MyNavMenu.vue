@@ -59,6 +59,9 @@
           })
         }
       }
+    },
+    mounted() {
+      this.path = this.$route.path
     }
   }
 </script>

@@ -105,10 +105,6 @@
         if (!this.correctPwd) {
           return this.passwordBlur()
         }
-        if (![parseInt(this.userid)].includes(NaN)) {
-          this.userid = parseInt(this.userid)
-        }
-        console.log(this.userid)
         await this.reqUserInfo({userid: this.userid, password: this.password, type: this.type})
         this.$router.replace('/home')
         Notification({

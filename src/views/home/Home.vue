@@ -142,6 +142,7 @@
           return this.rootArr
         }
       },
+      // 展示头像
       getAvatar() {
         let num = this.userInfo.sex === '男'? 'o15': 'o4'
         let uri = `http://demo.sc.chinaz.com/Files/pic/icons/7599/${num}.png`
@@ -153,6 +154,7 @@
         if (index !== 0) return
         this.$router.push(path)
       },
+      // 寻找到对应侧边栏数组的指定元素
       findItem(arr, path) {
         for(let val of arr) {
           let item = val.child.find(value => value.path == path)
@@ -161,22 +163,28 @@
           }
         }
       },
+      // 打开聊天窗口
       openChat() {
         this.flag = true
         this.showChat = true
+      },
+      // 路由触发的时候展示指定的路径
+      changeBread(path) {
+        if (path == '/home/index') {
+          return this.breadcrumbArr.splice(1)
+        }
+        this.view = this.findItem(this.changeArr, path)
+        this.breadcrumbArr.splice(1, 1, {title: this.view.title, path: this.view.path})
       }
     },
     watch: {
       '$route.path'(val, oldVal) {
-        if (val == '/home/index') {
-          return this.breadcrumbArr.splice(1)
-        }
-        this.view = this.findItem(this.changeArr, val)
-        this.breadcrumbArr.splice(1, 1, {title: this.view.title, path: this.view.path})
+        this.changeBread(val)
+        window.sessionStorage.setItem('path', val)
       }
     },
-    created() {
-    
+    mounted() {
+      this.changeBread(this.$route.path)
     }
   }
 </script>

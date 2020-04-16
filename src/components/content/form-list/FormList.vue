@@ -1,0 +1,201 @@
+<template>
+  <div class="form-list">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <div class="public">
+        <el-form-item label="学生姓名" prop="sname">
+          <el-input v-model="ruleForm.sname"></el-input>
+        </el-form-item>
+        <el-form-item label="学生学号" prop="userid">
+          <el-input v-model="ruleForm.userid" maxlength="12" show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="public">
+        <el-form-item label="年龄" prop="age">
+          <el-input v-model="ruleForm.age"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号" prop="card">
+          <el-input v-model="ruleForm.card" maxlength="18" show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="public">
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="ruleForm.phone" maxlength="11" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="职位" prop="position">
+          <el-input v-model="ruleForm.position" maxlength="10" show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="public">
+        <el-form-item label="出生日期" prop="birthday">
+          <el-date-picker type="date" placeholder="选择出生日期" v-model="ruleForm.birthday" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="专业" prop="major">
+          <el-input v-model="ruleForm.major" maxlength="20" show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="public">
+        <el-form-item label="民族" prop="nation">
+          <el-input v-model="ruleForm.nation"></el-input>
+        </el-form-item>
+        <el-form-item label="籍贯" prop="native">
+          <el-input v-model="ruleForm.native"></el-input>
+        </el-form-item>
+      </div>
+      <div class="public">
+        <el-form-item label="居住地" prop="address">
+          <el-cascader
+            size="large"
+            :options="options"
+            v-model="ruleForm.address"
+            separator="-">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="ruleForm.sex">
+            <el-radio label="男"></el-radio>
+            <el-radio label="女"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </div>
+      <div class="flex">
+        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+      </div>
+    </el-form>
+  </div>
+</template>
+
+<script>
+  import { regionData, CodeToText } from 'element-china-area-data'
+  import {
+    Form,
+    FormItem,
+    Button,
+    Input,
+    RadioGroup,
+    Radio,
+    Col,
+    DatePicker,
+    TimePicker,
+    Cascader
+  } from 'element-ui'
+  export default {
+    name: 'FormList',
+    components: {
+      'elForm': Form,
+      'elFormItem': FormItem,
+      'elButton': Button,
+      'elInput': Input,
+      'elRadioGroup': RadioGroup,
+      'elRadio': Radio,
+      'elCol': Col,
+      'elDatePicker': DatePicker,
+      'elTimePicker': TimePicker,
+      'elCascader': Cascader
+    },
+    data() {
+      let testPhone = (rule, value, callback) => {
+        if (!/^1[345678]\d{9}/.test(value)) {
+          return callback(new Error('请输入正确的手机号'))
+        }
+      }
+      return {
+        options: regionData,
+        ruleForm: {
+          sname: '',
+          userid: '',
+          age: '',
+          card: '',
+          phone: '',
+          major: '',
+          address: [],
+          native: '',
+          nation: '',
+          position: '',
+          birthday: '',
+          sex: '男'
+        },
+        rules: {
+          sname: [
+            { required: true, message: '请输入学生姓名', trigger: 'blur' },
+            { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+          userid: [
+            { required: true, message: '请输入学生学号，以2开头', trigger: 'blur' },
+            { min: 12, max: 12, message: '长度为12的数字', trigger: 'blur' }
+          ],
+          birthday: [
+            { type: 'date', message: '请选择出生日期', trigger: 'change' }
+          ],
+          age: [
+            { message: '年龄不能为空', trigger: 'change'}
+          ],
+          sex: [
+            { message: '请选择性别', trigger: 'change' }
+          ],
+          card: [
+            { required: true, message: '请输入身份证号码', trigger: 'change' },
+            { message: '长度为18位的有效身份证号码', trigger: 'change'}
+          ],
+          phone: [
+            { message: '请输入手机号码', trigger: 'blur' },
+            { validator: testPhone, trigger: 'blur'}
+          ],
+          major: [
+            { message: '请输入您的专业名称', trigger: 'blur' }
+          ],
+          address: [
+            { type: 'array', message: '请输入您的居住地', trigger: 'blur' }
+          ],
+          native: [
+            { message: '请输入您的籍贯', trigger: 'blur' }
+          ],
+          nation: [
+            { message: '请输入您的民族', trigger: 'blur' }
+          ],
+          position: [
+            { message: '请输入您的职位', trigger: 'blur' }
+          ]
+        },
+      }
+    },
+    computed: {
+      // 格式化时间
+      formatBirthday() {
+        let time = new Date(this.ruleForm.birthday)
+        return `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+      },
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (this.ruleForm.address.length === 0) return
+          if (valid) {
+            let address = this.ruleForm.address.map(item => CodeToText[item]).join('-')
+            let birthday = this.formatBirthday
+            this.$emit('successForm', {...this.ruleForm, address, type: 2, birthday})
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+  .form-list {
+    .public {
+      display: flex;
+      justify-content: space-evenly;
+      .el-form-item {
+        flex: 1;
+      }
+    }
+    .flex {
+      display: flex;
+      justify-content: center;
+    }
+  }
+</style>

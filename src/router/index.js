@@ -66,6 +66,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   let cookieId = Cookies.get('userid')
   let {userid} = store.state.userInfo
+  let path = window.sessionStorage.getItem('path')
   if (to.path === '/login') {
     return next()
   }
@@ -74,7 +75,8 @@ router.beforeEach(async (to, from, next) => {
   }
   if (!userid) {
     await store.dispatch('getStatus')
-    // return next('/home/index')
+    if (path) return next(path)
+    return next('/home/index')
   }
   next()
 })
