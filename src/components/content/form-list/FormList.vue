@@ -11,7 +11,7 @@
       </div>
       <div class="public">
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="ruleForm.age"></el-input>
+          <el-input v-model.number="ruleForm.age"></el-input>
         </el-form-item>
         <el-form-item label="身份证号" prop="card">
           <el-input v-model="ruleForm.card" maxlength="18" show-word-limit></el-input>
@@ -37,8 +37,8 @@
         <el-form-item label="民族" prop="nation">
           <el-input v-model="ruleForm.nation"></el-input>
         </el-form-item>
-        <el-form-item label="籍贯" prop="native">
-          <el-input v-model="ruleForm.native"></el-input>
+        <el-form-item label="籍贯" prop="snative">
+          <el-input v-model="ruleForm.snative"></el-input>
         </el-form-item>
       </div>
       <div class="public">
@@ -94,9 +94,25 @@
       'elCascader': Cascader
     },
     data() {
+      // 验证手机号
       let testPhone = (rule, value, callback) => {
+        if (value === '') {
+          return callback(new Error('请输入手机号'))
+        }
         if (!/^1[345678]\d{9}/.test(value)) {
           return callback(new Error('请输入正确的手机号'))
+        } else {
+          callback()
+        }
+      }
+      // 验证学号
+      let testUserid = (rule, value, callback) => {
+        if (value === '') {
+          return callback(new Error('请输入学生的学号'))
+        } else if (value[0] !== '2' || value.length !== 12) {
+          return callback(new Error('学生学号是以2开头的12位数'))
+        } else {
+          callback()
         }
       }
       return {
@@ -104,12 +120,12 @@
         ruleForm: {
           sname: '',
           userid: '',
-          age: '',
+          age: 18,
           card: '',
           phone: '',
           major: '',
           address: [],
-          native: '',
+          snative: '',
           nation: '',
           position: '',
           birthday: '',
@@ -121,14 +137,13 @@
             { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
           userid: [
-            { required: true, message: '请输入学生学号，以2开头', trigger: 'blur' },
-            { min: 12, max: 12, message: '长度为12的数字', trigger: 'blur' }
+            { required: true, validator: testUserid, trigger: 'blur' }
           ],
           birthday: [
-            { type: 'date', message: '请选择出生日期', trigger: 'change' }
+            { required: true, type: 'date', message: '请选择出生日期', trigger: 'change' }
           ],
           age: [
-            { message: '年龄不能为空', trigger: 'change'}
+            { type: 'number', message: '年龄不能为空'},
           ],
           sex: [
             { message: '请选择性别', trigger: 'change' }
@@ -138,16 +153,15 @@
             { message: '长度为18位的有效身份证号码', trigger: 'change'}
           ],
           phone: [
-            { message: '请输入手机号码', trigger: 'blur' },
-            { validator: testPhone, trigger: 'blur'}
+            { required: true, validator: testPhone, trigger: 'blur'}
           ],
           major: [
             { message: '请输入您的专业名称', trigger: 'blur' }
           ],
           address: [
-            { type: 'array', message: '请输入您的居住地', trigger: 'blur' }
+            { required: true, type: 'array', message: '请输入您的居住地', trigger: 'blur' }
           ],
-          native: [
+          snative: [
             { message: '请输入您的籍贯', trigger: 'blur' }
           ],
           nation: [
@@ -171,8 +185,10 @@
         this.$refs[formName].validate((valid) => {
           if (this.ruleForm.address.length === 0) return
           if (valid) {
+            /* 表单验证成功，则先把数据进行处理成符合发送请求的条件 */
             let address = this.ruleForm.address.map(item => CodeToText[item]).join('-')
             let birthday = this.formatBirthday
+            /* 传递给父组件发送请求 */
             this.$emit('successForm', {...this.ruleForm, address, type: 2, birthday})
           }
         });

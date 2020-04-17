@@ -3,10 +3,9 @@
     <div class="left">
       <el-select
         v-model="value"
-        multiple
         placeholder="请选择需要筛选的列名"
         filterable
-        allow-create
+        @change="changeValue"
         default-first-option>
         <el-option
           v-for="item in options"
@@ -18,12 +17,13 @@
       <el-input
         placeholder="输入筛选列的关键字"
         prefix-icon="el-icon-search"
+        @input="inputKeyword"
         v-model="keyword">
       </el-input>
     </div>
     <div class="right">
       <el-button-group>
-        <el-button type="primary" icon="el-icon-plus" @click.native="createStu" v-if="userType">添加学生</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click.native="createStu">添加学生</el-button>
         <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu" v-if="userType">回收站</el-button>
       </el-button-group>
     </div>
@@ -70,7 +70,7 @@
           { value: 'sex', label: '性别'},
           { value: 'age', label: '年龄'},
         ],
-        value: [],
+        value: 'sname',
         keyword: '',
         isShowStu: false
       }
@@ -79,6 +79,10 @@
       userType: {
         type: Boolean,
         default: true
+      },
+      val: {
+        type: String,
+        default: ''
       }
     },
     methods: {
@@ -91,13 +95,23 @@
       
       },
       /* 到这里说明表单验证成功了，需要发送传递给 actions 发送请求 */
-      async successForm(user) {
-        // 触发 actions 方法，发出请求
-        let result = await this.reqInsertStu(user)
-        setMessage(result.message, 'success')
-        // 发送成功之后，关闭弹框
+      successForm(user) {
+        console.log(this.isShowStu)
+        // 发送成功之后，关闭弹框并把内容情况，发送失败的关闭弹框但不把内容清空
         this.isShowStu = false
+        // 传递给父组件触发 actions 方法，发出请求
+        this.$emit('sendRequest', user)
+      },
+      changeValue(value) {
+        console.log(value)
+        this.$emit('changeValue', value)
+      },
+      inputKeyword(value) {
+        this.$emit('inputKeyword', value)
       }
+    },
+    mounted() {
+      this.value = this.val
     }
   }
 </script>

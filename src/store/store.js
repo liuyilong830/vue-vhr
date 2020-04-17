@@ -8,7 +8,9 @@ import getters from "./getters";
 Vue.use(Vuex)
 
 const state = {
-  userInfo: {}
+  userInfo: {},  // 登录用户信息
+  students: [],  // 所有学生信息
+  weather: {}  // 天气信息
 }
 
 export default new Vuex.Store({

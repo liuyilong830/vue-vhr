@@ -1,9 +1,15 @@
 /**
  * 该文件存放了所有关于 vuex 中的同步方法
  */
-import {CLOSETPATH} from './mutation-types'
+import {SETUSERINFO, SETSTUDENTS, SETWEATHER} from './mutation-types'
 export default {
-  setUserInfo(state, payload) {
+  [SETUSERINFO](state, payload) {
     state.userInfo = {...payload}
+  },
+  [SETSTUDENTS](state, students) {
+    state.students = students
+  },
+  [SETWEATHER](state, weather) {
+    state.weather = weather
   }
 }
