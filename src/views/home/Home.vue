@@ -16,14 +16,19 @@
           <my-nav-menu :listArr="changeArr"></my-nav-menu>
         </el-aside>
         <el-main>
-          <el-breadcrumb separator-class="el-icon-arrow-right" class="el-breadcrumb">
-            <el-breadcrumb-item
-              v-for="(item,index) in breadcrumbArr"
-              :key="item.title"
-              @click.native="changeBreadCru(item.path, index)">
-              <span :class="{active: index == 0}">{{item.title}}</span>
-            </el-breadcrumb-item>
-          </el-breadcrumb>
+          <div class="flex">
+            <el-breadcrumb separator-class="el-icon-arrow-right" class="el-breadcrumb">
+              <el-breadcrumb-item
+                v-for="(item,index) in breadcrumbArr"
+                :key="item.title"
+                @click.native="changeBreadCru(item.path, index)">
+                <span :class="{active: index == 0}">{{item.title}}</span>
+              </el-breadcrumb-item>
+            </el-breadcrumb>
+            <div class="weather">
+              <weather></weather>
+            </div>
+          </div>
           <router-view></router-view>
           <chat class="animated" @click.native="openChat" :class="{tada: flag}"></chat>
           <chat-box v-model="showChat"></chat-box>
@@ -52,6 +57,7 @@
   import List from 'components/comment/list/List'
   import Chat from 'components/comment/chat/Chat'
   import ChatBox from 'components/content/chat-box/ChatBox'
+  import Weather from "components/comment/weather/Weather";
   export default {
     name: 'Home',
     components: {
@@ -68,7 +74,8 @@
       MyNavMenu,
       List,
       Chat,
-      ChatBox
+      ChatBox,
+      Weather
     },
     data() {
       return {
@@ -201,16 +208,25 @@
     }
     .main {
       height: calc(100vh - 60px);
-      .el-breadcrumb {
-        font-size: 16px;
-        margin-bottom: 10px;
-        .active {
-          font-weight: 600;
-          transition: color .3s;
-          &:hover {
-            cursor: pointer;
-            color: #409EFF;
+      .flex {
+        display: flex;
+        align-items: center;
+        .el-breadcrumb {
+          flex: 1;
+          font-size: 16px;
+          margin-bottom: 10px;
+          .active {
+            font-weight: 600;
+            transition: color .3s;
+            &:hover {
+              cursor: pointer;
+              color: #409EFF;
+            }
           }
+        }
+        .weather {
+          flex: 1;
+          
         }
       }
     }
