@@ -12,7 +12,7 @@
             placeholder="请输入用户名"
             prefix-icon="el-icon-user"
             clearable
-            :maxlength="10"
+            :maxlength="12"
             :show-word-limit="true">
           </el-input>
           <el-input
@@ -75,7 +75,7 @@
         userid: '',
         password: "",
         checked: false,
-        type: 2 // 1 表示学生登录、2 表示教师登录、3表示辅导员（管理员登录）
+        type: 2 // 2 表示学生登录、1 表示教师登录、3表示辅导员（管理员登录）
       }
     },
     computed: {
