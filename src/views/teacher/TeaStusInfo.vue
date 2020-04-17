@@ -3,6 +3,7 @@
     <operation
       :user-type="getUserType"
       :val="value"
+      :options="options"
       @sendRequest="sendRequest"
       @changeValue="changeValue"
       @inputKeyword="inputKeyword"></operation>
@@ -41,7 +42,14 @@
         keyword: '',  // 搜素关键字
         pageCount: 1,  // 当前页码
         users: [],
-        filterUsers: []
+        filterUsers: [],
+        options: [
+          { value: 'sname', label: '姓名'},
+          { value: 'userid', label: '学号'},
+          { value: 'address', label: '居住地'},
+          { value: 'sex', label: '性别'},
+          { value: 'age', label: '年龄'},
+        ],
       }
     },
     computed: {

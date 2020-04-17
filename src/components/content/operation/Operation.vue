@@ -24,7 +24,7 @@
     <div class="right">
       <el-button-group>
         <el-button type="primary" icon="el-icon-plus" @click.native="createStu">添加学生</el-button>
-        <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu" v-if="userType">回收站</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu">回收站</el-button>
       </el-button-group>
     </div>
     <el-dialog
@@ -49,7 +49,6 @@
   import {mapActions} from 'vuex'
   
   import FormList from "../form-list/FormList";
-  import {setMessage} from '../../../utils/index'
   export default {
     name: 'Operation',
     components: {
@@ -63,13 +62,6 @@
     },
     data() {
       return {
-        options: [
-          { value: 'sname', label: '姓名'},
-          { value: 'userid', label: '学号'},
-          { value: 'address', label: '居住地'},
-          { value: 'sex', label: '性别'},
-          { value: 'age', label: '年龄'},
-        ],
         value: 'sname',
         keyword: '',
         isShowStu: false
@@ -83,6 +75,12 @@
       val: {
         type: String,
         default: ''
+      },
+      options: {
+        type: Array,
+        default() {
+          return []
+        }
       }
     },
     methods: {
@@ -102,10 +100,12 @@
         // 传递给父组件触发 actions 方法，发出请求
         this.$emit('sendRequest', user)
       },
+      // 改变了筛选依据的时候需要跟父组件中同步
       changeValue(value) {
         console.log(value)
         this.$emit('changeValue', value)
       },
+      // 改变了筛选值的时候需要跟父组件中同步
       inputKeyword(value) {
         this.$emit('inputKeyword', value)
       }

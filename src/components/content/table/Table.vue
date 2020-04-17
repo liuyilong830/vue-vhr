@@ -1,7 +1,7 @@
 <template>
   <div class="table">
     <el-table :data="showStudents" border fit style="width: 100%" max-height="640px" :highlight-current-row="true" v-if="showStudents">
-      <el-table-column fixed type="index" width="50"></el-table-column>
+      <el-table-column fixed type="index" :index="startIndex" width="50"></el-table-column>
       <el-table-column fixed prop="sname" label="姓名" width="120"></el-table-column>
       <el-table-column prop="userid" label="学号" width="150"></el-table-column>
       <el-table-column prop="age" label="年龄" width="80"></el-table-column>
@@ -30,7 +30,6 @@
     TableColumn,
     Button
   } from 'element-ui'
-  import {mapGetters} from 'vuex'
   export default {
     name: 'Table',
     components: {
@@ -42,37 +41,34 @@
       return {}
     },
     props: {
+      // 所有用户信息组成的数组
       users: {
         type: Array,
         default() {
           return []
         }
       },
+      // 父组件中传递下来的当前分页数字
       pageCount: {
         type: Number,
         default: 1
       }
     },
     computed: {
+      // 按照指定的格式，筛选出从 prev 到 next 之间的数据用来展示，因为在分页的时候需要切换
       showStudents() {
         let prev,next
         prev = (this.pageCount - 1) * 10
         next = this.pageCount * 10
         return this.users.map(user => ({
-          userid: user.userid,
-          sname: user.sname,
-          age: user.age,
-          sex: user.sex,
-          card: user.card,
-          phone: user.phone,
-          birthday: this.formatBirthday(user.birthday),
-          major: user.major,
-          address: user.address,
-          snative: user.snative,
-          nation: user.nation,
-          position: user.position
+          ...user,
+          birthday: this.formatBirthday(user.birthday)
         })).filter((user,index) => index >= prev && index < next)
       },
+      // 由于展示的数据是过滤后的10个以内的数组，而不是总数组，所有需要自定义索引值作为序列号
+      startIndex() {
+        return (this.pageCount - 1) * 10 + 1
+      }
     },
     methods: {
       // 格式化时间
@@ -80,6 +76,7 @@
         let t = new Date(time)
         return `${t.getFullYear()}-${this.formatNumber(t.getMonth() + 1)}-${this.formatNumber(t.getDate())}`
       },
+      // 对应 0~9 之间的数字需要改变成 00~09
       formatNumber(num) {
         if (num < 10) return '0'+ num
         return num

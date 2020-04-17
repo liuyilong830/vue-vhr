@@ -115,6 +115,14 @@
           callback()
         }
       }
+      // 验证居住地
+      let testAddress = (rule, value, callback) => {
+        if (value.length === 0) {
+          return callback(new Error('请选择居住地'))
+        } else {
+          callback()
+        }
+      }
       return {
         options: regionData,
         ruleForm: {
@@ -159,7 +167,7 @@
             { message: '请输入您的专业名称', trigger: 'blur' }
           ],
           address: [
-            { required: true, type: 'array', message: '请输入您的居住地', trigger: 'blur' }
+            { required: true, type: 'array', validator: testAddress, trigger: 'blur' }
           ],
           snative: [
             { message: '请输入您的籍贯', trigger: 'blur' }
@@ -181,8 +189,10 @@
       },
     },
     methods: {
+      // 点击创建的时候触发
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
+          // 如果没有选择居住地则不进行下一步，到时候写进规则中去
           if (this.ruleForm.address.length === 0) return
           if (valid) {
             /* 表单验证成功，则先把数据进行处理成符合发送请求的条件 */
@@ -193,6 +203,7 @@
           }
         });
       },
+      // 点击重置按钮触发
       resetForm(formName) {
         this.$refs[formName].resetFields();
       }
