@@ -27,21 +27,21 @@
       weatherStyle() {
         if (this.weather.wea_img == 'yu') {
           return 'icon-yutian'
-        } else if (this.weather.wea == 'qing') {
+        } else if (this.weather.wea_img == 'qing') {
           return 'icon-tianqi-qingtian-copy'
-        } else if (this.weather.wea == 'wanshang') {
+        } else if (this.weather.wea_img == 'wanshang') {
           return 'icon-wanshang'
-        } else if (this.weather.wea == 'xue') {
+        } else if (this.weather.wea_img == 'xue') {
           return 'icon-xue1'
-        } else if (this.weather.wea == 'lei') {
+        } else if (this.weather.wea_img == 'lei') {
           return 'icon-dalei'
-        } else if (this.weather.wea == 'shachen') {
+        } else if (this.weather.wea_img == 'shachen') {
           return 'icon-shachen'
-        } else if (this.weather.wea == 'wu') {
+        } else if (this.weather.wea_img == 'wu') {
           return 'icon-wutian'
-        } else if (this.weather.wea == 'bingbao') {
+        } else if (this.weather.wea_img == 'bingbao') {
           return 'icon-bingbao'
-        } else if (this.weather.wea == 'yin') {
+        } else if (this.weather.wea_img == 'yin') {
           return 'icon-yintian'
         }
       }
