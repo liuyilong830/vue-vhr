@@ -9,8 +9,8 @@ Vue.use(Vuex)
 
 const state = {
   userInfo: {},  // 登录用户信息
-  students: [],  // 所有学生信息
-  weather: {}  // 天气信息
+  users: [],  // 获取到的所有用户信息或者某一个用户信息
+  weather: {},  // 天气信息
 }
 
 export default new Vuex.Store({

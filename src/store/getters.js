@@ -2,10 +2,10 @@ export default {
   getUserInfo(state) {
     return state.userInfo
   },
-  getStudents(state) {
-    return state.students
+  getUsers(state) {
+    return state.users
   },
   getWeather(state) {
     return state.weather
-  }
+  },
 }

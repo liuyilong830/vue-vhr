@@ -22,7 +22,6 @@ instance.interceptors.response.use(response => {
   } else if (result.code === 401) {
     return router.replace('/login')
   } else {
-    console.log(router)
     Promise.reject(result).catch((result) => {
       setMessage(result.message, 'error')
     })

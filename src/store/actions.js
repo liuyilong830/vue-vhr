@@ -1,26 +1,60 @@
 /**
  * 该文件存放所有的 vuex 中的异步请求方法
  */
-import {reqLogin,reqStatus,reqInsertStu,reqStudents, reqWeather} from 'api/index.js'
+import {
+  SETUSERINFO,
+  SETSTUDENTS,
+  SETWEATHER,
+} from './mutation-types'
+import {reqLogin,reqStatus,reqInsertStu,reqStudents, reqWeather,reqUpdateStu,reqDeleteStu,reqStuById,reqGetTeas} from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
     let result = await reqLogin(payload)
-    commit('setUserInfo', result.user)
+    if (result) {
+      commit( SETUSERINFO, result.user)
+    }
   },
   async getStatus({ commit }) {
     let result = await reqStatus()
-    commit('setUserInfo', result.user)
+    if (result) {
+      commit( SETUSERINFO, result.user)
+    }
   },
   async reqInsertStu({ commit }, user) {
     return await reqInsertStu(user)
   },
   async reqStudents({ commit }) {
     let result = await reqStudents()
-    commit('setStudents', result.users)
+    if (result) {
+      commit( SETSTUDENTS, result.users)
+    }
+  },
+  async reqStuById({ commit }, userid) {
+    let result = await reqStuById(userid)
+    if (result.data) {
+      commit( SETSTUDENTS, result.data.items)
+    }
   },
   // 获取天气的api
   async reqWeather({commit}) {
     let result = await reqWeather()
-    commit('setWeather', result.data)
+    if (result) {
+      commit( SETWEATHER, result.data )
+    }
+  },
+  // 更新学生信息
+  async reqUpdateStu({ commit }, user) {
+    return await reqUpdateStu(user)
+  },
+  // 删除学生信息
+  async reqDeleteStu({ commit }, userid) {
+    return await reqDeleteStu(userid)
+  },
+  // 获取所有教师的信息
+  async reqGetTeas({ commit }) {
+    let result = await reqGetTeas()
+    if (result.data) {
+      commit(SETSTUDENTS, result.data.items)
+    }
   }
 }

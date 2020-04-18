@@ -209,6 +209,8 @@
     .main {
       height: calc(100vh - 60px);
       .flex {
+        height: 30px;
+        margin-bottom: 15px;
         display: flex;
         align-items: center;
         .el-breadcrumb {

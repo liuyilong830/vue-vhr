@@ -23,13 +23,14 @@
     </div>
     <div class="right">
       <el-button-group>
-        <el-button type="primary" icon="el-icon-plus" @click.native="createStu">添加学生</el-button>
-        <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu">回收站</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click.native="createStu" v-if="getUserType">添加学生</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu" v-if="false">回收站</el-button>
       </el-button-group>
     </div>
     <el-dialog
       title="添加学生"
       :visible.sync="isShowStu"
+      :destroy-on-close="true"
       width="900px"
       center>
       <form-list @successForm="successForm"></form-list>
@@ -46,7 +47,7 @@
     Input,
     Dialog
   } from 'element-ui'
-  import {mapActions} from 'vuex'
+  import {mapActions,mapGetters} from 'vuex'
   
   import FormList from "../form-list/FormList";
   export default {
@@ -64,14 +65,10 @@
       return {
         value: 'sname',
         keyword: '',
-        isShowStu: false
+        isShowStu: false,
       }
     },
     props: {
-      userType: {
-        type: Boolean,
-        default: true
-      },
       val: {
         type: String,
         default: ''
@@ -82,6 +79,13 @@
           return []
         }
       }
+    },
+    computed: {
+      ...mapGetters(['getUserInfo']),
+      // 当辅导员登录的时候才显示添加学生按钮和回收站里面删除的学生的按钮
+      getUserType() {
+        return this.getUserInfo.type === 3
+      },
     },
     methods: {
       ...mapActions(['reqInsertStu']),
@@ -94,7 +98,6 @@
       },
       /* 到这里说明表单验证成功了，需要发送传递给 actions 发送请求 */
       successForm(user) {
-        console.log(this.isShowStu)
         // 发送成功之后，关闭弹框并把内容情况，发送失败的关闭弹框但不把内容清空
         this.isShowStu = false
         // 传递给父组件触发 actions 方法，发出请求
@@ -102,7 +105,6 @@
       },
       // 改变了筛选依据的时候需要跟父组件中同步
       changeValue(value) {
-        console.log(value)
         this.$emit('changeValue', value)
       },
       // 改变了筛选值的时候需要跟父组件中同步

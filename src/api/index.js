@@ -13,8 +13,16 @@ export const reqStatus = () => ajax('/user')
 export const reqInsertStu = (user) => ajax('/insertStu', user, 'post')
 // 获取所有学员的信息
 export const reqStudents = () => ajax('/stusInfo')
+// 根据userid获取指定学员的信息
+export const reqStuById = (userid) => ajax('/stuById', {userid})
 // 获取当前的天气信息
 export const reqWeather = () => axios({
   url: 'https://tianqiapi.com/free/day',
   params: {appid: 11997696, appsecret: 'PT7ucDD9'}
 })
+// 更新某一个学生的信息
+export const reqUpdateStu = (user) => ajax('/updateStu', user, 'post')
+// 删除某一个学生
+export const reqDeleteStu = (userid) => ajax('/deleteStu', {userid}, 'post')
+// 获取所有教师的信息
+export const reqGetTeas = () => ajax('/teasInfo')

@@ -1,48 +1,59 @@
 <template>
   <div class="teacher-stus-info">
     <operation
-      :user-type="getUserType"
       :val="value"
       :options="options"
       @sendRequest="sendRequest"
       @changeValue="changeValue"
-      @inputKeyword="inputKeyword"></operation>
-    <my-table class="my-table" :pageCount="pageCount" :users="filterUsers" v-if="filterUsers.length !== 0"></my-table>
-    <div class="flex">
-      <el-pagination
-        v-if="paginationCount"
-        background
-        layout="prev, pager, next"
-        @current-change="currentChange"
-        :total="paginationCount">
-      </el-pagination>
-      <!-- total 表示所有数据条目数，默认是一页 10 条 -->
-    </div>
+      @inputKeyword="inputKeyword" />
+    <table-pagination :ruleForm="ruleForm" :rules="rules" :filterUsers="filterUsers" @setPageCount="setPageCount"></table-pagination>
   </div>
 </template>
 
 <script>
-  import {
-    Pagination
-  } from 'element-ui'
-  import Table from "../../components/content/table/Table";
   import Operation from 'components/content/operation/Operation'
+  import TablePagination from 'components/content/table-pagination/TablePagination'
   import {mapGetters, mapActions} from 'vuex'
   import {setMessage} from '../../utils/index'
   export default {
     name: 'TeaStusInfo',
     components: {
-      'myTable': Table,
-      'elPagination': Pagination,
       Operation,
+      TablePagination
     },
     data() {
+      // 验证手机号
+      let testPhone = (rule, value, callback) => {
+        if (value === '') {
+          return callback(new Error('请输入手机号'))
+        }
+        if (!/^1[345678]\d{9}/.test(value)) {
+          return callback(new Error('请输入正确的手机号'))
+        } else {
+          callback()
+        }
+      }
+      // 验证学号
+      let testUserid = (rule, value, callback) => {
+        if (value === '') {
+          return callback(new Error('请输入学生的学号'))
+        } else if (value[0] !== '2' || value.length !== 12) {
+          return callback(new Error('学生学号是以2开头的12位数'))
+        } else {
+          callback()
+        }
+      }
+      // 验证居住地
+      let testAddress = (rule, value, callback) => {
+        if (value.length === 0) {
+          return callback(new Error('请选择居住地'))
+        } else {
+          callback()
+        }
+      }
       return {
         value: 'sname',  // 搜索条件
         keyword: '',  // 搜素关键字
-        pageCount: 1,  // 当前页码
-        users: [],
-        filterUsers: [],
         options: [
           { value: 'sname', label: '姓名'},
           { value: 'userid', label: '学号'},
@@ -50,23 +61,67 @@
           { value: 'sex', label: '性别'},
           { value: 'age', label: '年龄'},
         ],
+        pageCount: 1,  // 当前页码
+        users: [],
+        filterUsers: [],
+        ruleForm: {
+          sname: '',
+          userid: '',
+          age: 18,
+          card: '',
+          phone: '',
+          major: '',
+          address: [],
+          snative: '',
+          nation: '',
+          position: '',
+          birthday: '',
+          sex: '男'
+        },
+        rules: {
+          sname: [
+            { required: true, message: '请输入学生姓名', trigger: 'blur' },
+            { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+          userid: [
+            { required: true, validator: testUserid, trigger: 'blur' }
+          ],
+          birthday: [
+            { required: true, type: 'date', message: '请选择出生日期', trigger: 'change' }
+          ],
+          age: [
+            { type: 'number', message: '年龄不能为空'},
+          ],
+          sex: [
+            { message: '请选择性别', trigger: 'change' }
+          ],
+          card: [
+            { required: true, message: '请输入身份证号码', trigger: 'change' },
+            { message: '长度为18位的有效身份证号码', trigger: 'change'}
+          ],
+          phone: [
+            { required: true, validator: testPhone, trigger: 'blur'}
+          ],
+          major: [
+            { message: '请输入您的专业名称', trigger: 'blur' }
+          ],
+          address: [
+            { required: true, type: 'array', validator: testAddress, trigger: 'blur' }
+          ],
+          snative: [
+            { message: '请输入您的籍贯', trigger: 'blur' }
+          ],
+          nation: [
+            { message: '请输入您的民族', trigger: 'blur' }
+          ],
+          position: [
+            { message: '请输入您的职位', trigger: 'blur' }
+          ]
+        },
       }
     },
     computed: {
-      ...mapGetters(['getUserInfo','getStudents']),
-      // 当辅导员登录的时候才显示添加学生按钮和回收站里面删除的学生的按钮
-      getUserType() {
-        return this.getUserInfo.type === 3
-      },
-      // 动态设置分页器总共的页码数量
-      paginationCount() {
-        let count = 0
-        let len = this.filterUsers.length
-        if (len !== 0) {
-          count = Math.ceil(len / 10) * 10
-        }
-        return count
-      }
+      ...mapGetters(['getUserInfo','getUsers'])
     },
     methods: {
       ...mapActions(['reqStudents','reqInsertStu']),
@@ -78,8 +133,8 @@
       inputKeyword(value) {
         this.keyword = value
       },
-      // 分页器变化的时候会触发 page为当前的页码
-      currentChange(page) {
+      // 子组件触发了切换页码，则会传递到这里将它保存，用于在监听器中监听
+      setPageCount(page) {
         this.pageCount = page
       },
       // 过滤掉部分学生，在分页展示和筛选的时候有用
@@ -89,7 +144,7 @@
         next = page  * count
         return arr.filter((item,index) => index >= prev && index < next)
       },
-      // 发送请求
+      // 发送增加学生的请求
       async sendRequest(user) {
         // 触发 actions 方法，发出请求
         let result = await this.reqInsertStu(user)
@@ -103,6 +158,7 @@
       this.reqStudents()
     },
     watch: {
+      // 监听关键字的变化，并作出相应的改变
       keyword(val) {
         if (val === '') {
           return this.filterUsers = this.users
@@ -110,7 +166,7 @@
         let arr = this.users.filter(user => user[this.value].includes(val))
         this.filterUsers = this.changeStus(this.pageCount, 10, arr)
       },
-      getStudents(val) {
+      getUsers(val) {
         this.users = this.filterUsers = val
       }
     }
@@ -120,6 +176,7 @@
 <style lang="less" scoped>
   .teacher-stus-info {
     position: relative;
+    height: calc(100% - 60px);
     .operation {
       height: 60px;
       margin: 15px 0;
@@ -131,7 +188,7 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: -75px;
+      bottom: 0px;
     }
   }
 </style>
