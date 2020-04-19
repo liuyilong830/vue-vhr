@@ -1,30 +1,27 @@
 <template>
-  <div class="student-base-info" v-if="getUsers">
-    <table-pagination :filterUsers="filterUsers" :user-type="getUserType" @setPageCount="setPageCount"></table-pagination>
+  <div class="student-base-info" v-if="getUsers.length !== 0">
+    <self-table :user="selfUser" @successForm="successForm"></self-table>
   </div>
 </template>
 
 <script>
   import {mapActions, mapGetters} from 'vuex'
   
-  import TablePagination from "../../components/content/table-pagination/TablePagination";
+  import SelfTable from "components/content/table/SelfTable";
   export default {
     name: 'stuBaseInfo',
     components: {
-      TablePagination
+      SelfTable
     },
     data() {
       return {
         userid: '',
         pageCount: 1,
-        filterUsers: []
+        selfUser: []
       }
     },
     computed: {
       ...mapGetters(['getUserInfo','getUsers']),
-      getUserType() {
-        return this.getUserInfo.type === 3
-      }
     },
     methods: {
       ...mapActions(['reqStuById']),
@@ -32,13 +29,12 @@
       setPageCount(page) {
         this.pageCount = page
       },
-    },
-    watch: {
-      getUsers(val) {
-        this.filterUsers = val
+      successForm(user) {
+        console.log(user)
       }
     },
     created() {
+      this.selfUser.push(this.getUserInfo)
       this.userid = this.getUserInfo.userid
       this.reqStuById(this.userid)
     }

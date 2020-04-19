@@ -30,7 +30,7 @@
       :destroy-on-close="true"
       width="900px"
       center>
-      <edit-info @successForm="successForm" @closeForm="closeForm" :ruleForm="form" :rules="rules"></edit-info>
+      <edit-info @successForm="successForm" @closeForm="closeForm" :ruleForm="form"></edit-info>
     </el-dialog>
   </div>
 </template>
@@ -76,21 +76,12 @@
         type: Number,
         default: 1
       },
-      ruleForm: {
-        type: Object,
-        default() {
-          return {}
-        }
-      },
-      rules: {
-        type: Object,
-        default() {
-          return {}
-        }
-      }
     },
     computed: {
-      ...mapGetters(['getUserInfo']),
+      ...mapGetters(['getUserInfo','getUsers']),
+      isType() {
+        return this.getUsers[0].type
+      },
       // 当辅导员登录的时候才显示添加学生按钮和回收站里面删除的学生的按钮
       getUserType() {
         return this.getUserInfo.type === 3
@@ -129,24 +120,34 @@
       // 点击编辑按钮，打开编辑学生窗口，同时将该学生的信息显示在窗口对应的位置
       handleClick(row) {
         let arr = row.address.split('-')
-        let birthday = new Date(row.birthday)
         let address = []
         address[0] = TextToCode[arr[0]].code
         address[1] = TextToCode[arr[0]][arr[1]].code
         address[2] = TextToCode[arr[0]][arr[1]][arr[2]].code
-        this.form = {...this.ruleForm, ...row, address, birthday}
+        if (this.isType === 2) {
+          let birthday = new Date(row.birthday)
+          this.form = { ...row, address, birthday}
+        } else if (this.isType === 1) {
+          this.form = { ...row, address}
+        }
         this.isEdit = true
       },
       // 发送更新学生信息的请求
       async successForm(user) {
         // 发送成功之后，关闭弹框并把内容情况，发送失败的关闭弹框但不把内容清空
         this.isEdit = false
-        let result = await this.reqUpdateStu(user)
-        if (result.code === 200) {
-          setMessage(result.message, 'success')
-          let index = this.users.findIndex(item => item.userid === user.userid)
-          this.users.splice(index, 1 , user)
+        if (this.isType === 2) {
+          let result = await this.reqUpdateStu(user)
+          if (result.code === 200) {
+            setMessage(result.message, 'success')
+            let index = this.users.findIndex(item => item.userid === user.userid)
+            this.users.splice(index, 1 , user)
+          }
+        } else if (this.isType === 1) {
+          console.log(user)
         }
+        this.$emit('successForm', user)
+        
       },
       closeForm() {
         this.isEdit = false

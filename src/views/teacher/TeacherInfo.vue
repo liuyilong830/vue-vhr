@@ -3,11 +3,12 @@
     <operation
       :val="value"
       :options="options"
+      v-if="getUsers.length !== 0"
       @changeValue="changeValue"
       @inputKeyword="inputKeyword">
     </operation>
-    <self-table :user="selfUser" :ruleForm="ruleForm" :rules="rules" @successForm="successForm"></self-table>
-    <table-pagination :filterUsers="filterUsers" @setPageCount="setPageCount" :ruleForm="ruleForm" :rules="rules"></table-pagination>
+    <self-table :user="selfUser" @successForm="successForm"></self-table>
+    <table-pagination :filterUsers="filterUsers" @setPageCount="setPageCount"></table-pagination>
   </div>
 </template>
 

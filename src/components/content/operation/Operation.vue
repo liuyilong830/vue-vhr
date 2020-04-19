@@ -23,12 +23,12 @@
     </div>
     <div class="right">
       <el-button-group>
-        <el-button type="primary" icon="el-icon-plus" @click.native="createStu" v-if="getUserType">添加学生</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click.native="createStu" v-if="getUserType">{{getTitle}}</el-button>
         <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu" v-if="false">回收站</el-button>
       </el-button-group>
     </div>
     <el-dialog
-      title="添加学生"
+      :title="getTitle"
       :visible.sync="isShowStu"
       :destroy-on-close="true"
       width="900px"
@@ -81,11 +81,14 @@
       }
     },
     computed: {
-      ...mapGetters(['getUserInfo']),
+      ...mapGetters(['getUserInfo','getUsers']),
       // 当辅导员登录的时候才显示添加学生按钮和回收站里面删除的学生的按钮
       getUserType() {
         return this.getUserInfo.type === 3
       },
+      getTitle() {
+        return this.getUsers[0].type === 1? '添加教师' : '添加学生'
+      }
     },
     methods: {
       ...mapActions(['reqInsertStu']),

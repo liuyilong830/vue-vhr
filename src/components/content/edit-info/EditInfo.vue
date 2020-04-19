@@ -1,7 +1,7 @@
 <template>
   <div class="edit-info">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <div v-if="getUsers[0].type === 2">
+    <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <div v-if="isType === 2">
         <div class="public">
           <el-form-item label="学生姓名" prop="sname">
             <el-input v-model="ruleForm.sname" :disabled="true"></el-input>
@@ -59,7 +59,7 @@
           </el-form-item>
         </div>
       </div>
-      <div v-if="getUsers[0].type === 1">
+      <div v-if="isType === 1">
         <div class="public">
           <el-form-item label="老师姓名" prop="tname">
             <el-input v-model="ruleForm.tname" :disabled="true"></el-input>
@@ -136,6 +136,8 @@
     data() {
       return {
         options: regionData,
+        form: {},
+        rules: {}
       }
     },
     props: {
@@ -145,17 +147,139 @@
           return {}
         }
       },
-      rules: {
-        type: Object,
-        default() {
-          return {}
-        }
-      }
     },
     computed: {
       ...mapGetters(['getUserInfo','getUsers']),
       isType() {
         return this.getUsers[0].type
+      },
+      setRuleForm() {
+        if (this.isType === 2) {
+          return {
+            sname: '',
+            userid: '',
+            age: 18,
+            card: '',
+            phone: '',
+            major: '',
+            address: [],
+            snative: '',
+            nation: '',
+            position: '',
+            birthday: '',
+            sex: '男'
+          }
+        } else if (this.isType === 1) {
+          return {
+            tname: '',
+            userid: '',
+            card: '',
+            phone: '',
+            address: [],
+            tnative: ''
+          }
+        }
+      },
+      setRules() {
+        // 验证手机号
+        let testPhone = (rule, value, callback) => {
+          if (value === '') {
+            return callback(new Error('请输入手机号'))
+          }
+          if (!/^1[345678]\d{9}/.test(value)) {
+            return callback(new Error('请输入正确的手机号'))
+          } else {
+            callback()
+          }
+        }
+        // 验证学号
+        let testUserid = (rule, value, callback) => {
+          if (value === '') {
+            return callback(new Error('请输入学生的学号'))
+          } else if (this.isType === 1) {
+            if (value[0] !== '1') {
+              return callback(new Error('学生学号是以1开头的数'))
+            }
+          } else if (this.isType === 2) {
+            if (value[0] !== '2' || value.length !== 12) {
+              return callback(new Error('学生学号是以2开头的12位数'))
+            }
+          }
+          callback()
+        }
+        // 验证居住地
+        let testAddress = (rule, value, callback) => {
+          if (value.length === 0) {
+            return callback(new Error('请选择居住地'))
+          } else {
+            callback()
+          }
+        }
+        if (this.isType === 2) {
+          return {
+            sname: [
+              { required: true, message: '请输入学生姓名', trigger: 'blur' },
+              { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            ],
+            userid: [
+              { required: true, validator: testUserid, trigger: 'blur' }
+            ],
+            birthday: [
+              { required: true, type: 'date', message: '请选择出生日期', trigger: 'change' }
+            ],
+            age: [
+              { type: 'number', message: '年龄不能为空'},
+            ],
+            sex: [
+              { message: '请选择性别', trigger: 'change' }
+            ],
+            card: [
+              { required: true, message: '请输入身份证号码', trigger: 'change' },
+              { message: '长度为18位的有效身份证号码', trigger: 'change'}
+            ],
+            phone: [
+              { required: true, validator: testPhone, trigger: 'blur'}
+            ],
+            major: [
+              { message: '请输入您的专业名称', trigger: 'blur' }
+            ],
+            address: [
+              { required: true, type: 'array', validator: testAddress, trigger: 'blur' }
+            ],
+            snative: [
+              { message: '请输入您的籍贯', trigger: 'blur' }
+            ],
+            nation: [
+              { message: '请输入您的民族', trigger: 'blur' }
+            ],
+            position: [
+              { message: '请输入您的职位', trigger: 'blur' }
+            ]
+          }
+        } else if (this.isType === 1) {
+          return {
+            tname: [
+              { required: true, message: '请输入学生姓名', trigger: 'blur' },
+              { min: 2, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            ],
+            userid: [
+              { required: true, validator: testUserid, trigger: 'blur' }
+            ],
+            card: [
+              { required: true, message: '请输入身份证号码', trigger: 'change' },
+              { message: '长度为18位的有效身份证号码', trigger: 'change'}
+            ],
+            phone: [
+              { required: true, validator: testPhone, trigger: 'blur'}
+            ],
+            address: [
+              { required: true, type: 'array', validator: testAddress, trigger: 'blur' }
+            ],
+            tnative: [
+              { message: '请输入您的籍贯', trigger: 'blur' }
+            ]
+          }
+        }
       },
       // 格式化时间
       formatBirthday() {
@@ -183,6 +307,10 @@
       closeForm() {
         this.$emit('closeForm', false)
       }
+    },
+    created() {
+      this.form = this.ruleForm
+      this.rules = this.setRules
     }
   }
 </script>

@@ -5,8 +5,6 @@
       class="my-table"
       :pageCount="pageCount"
       :users="filterUsers"
-      :ruleForm="ruleForm"
-      :rules="rules"
       v-if="this.filterUsers.length !== 0"></my-table>
     <div class="flex">
       <el-pagination
@@ -44,18 +42,6 @@
           return []
         }
       },
-      ruleForm: {
-        type: Object,
-        default() {
-          return {}
-        }
-      },
-      rules: {
-        type: Object,
-        default() {
-          return {}
-        }
-      }
     },
     computed: {
       paginationCount() {
