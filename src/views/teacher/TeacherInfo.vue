@@ -1,5 +1,5 @@
 <template>
-  <div class="teacher-info">
+  <div class="teacher-info" v-if="showPage">
     <operation
       :val="value"
       :options="options"
@@ -17,6 +17,7 @@
   import TablePagination from 'components/content/table-pagination/TablePagination'
   import SelfTable from "../../components/content/table/SelfTable";
   import {mapActions,mapGetters} from 'vuex'
+  import {setMessage} from '../../utils/index'
   export default {
     name: 'TeacherInfo',
     components: {
@@ -99,10 +100,13 @@
       }
     },
     computed: {
-      ...mapGetters(['getUsers','getUserInfo']),
+      ...mapGetters(['getUsers','getUserInfo','getSelfInfo']),
+      showPage() {
+        return this.selfUser.length !== 0 && this.users.length !== 0
+      },
     },
     methods: {
-      ...mapActions(['reqGetTeas']),
+      ...mapActions(['reqGetTeas','reqTeaById','reqUpdateTea']),
       // 将子组件选择的搜索依据返回给父组件保存，可确保按照合适的要求去筛选数据
       changeValue(value) {
         this.value = value
@@ -122,8 +126,12 @@
         next = page  * count
         return arr.filter((item,index) => index >= prev && index < next)
       },
-      successForm(user) {
-        console.log(user)
+      async successForm(user) {
+        let result = await this.reqUpdateTea(user)
+        if (result.code === 200) {
+          setMessage(result.message, 'success')
+          this.selfUser.splice(0, 1, user)
+        }
       }
     },
     watch: {
@@ -137,11 +145,14 @@
       },
       getUsers(val) {
         this.users = this.filterUsers = val
+      },
+      getSelfInfo(val) {
+        this.selfUser = val
       }
     },
     created() {
       this.reqGetTeas()
-      this.selfUser.push(this.getUserInfo)
+      this.reqTeaById(this.getUserInfo.userid)
     }
   }
 </script>

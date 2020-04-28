@@ -8,7 +8,11 @@
       @changeValue="changeValue"
       @inputKeyword="inputKeyword">
     </operation>
-    <table-pagination :filterUsers="filterUsers" @setPageCount="setPageCount"></table-pagination>
+    <table-pagination
+      :filterUsers="filterUsers"
+      @setPageCount="setPageCount"
+      @deleteUser="deleteUser"
+      @successForm="successForm"></table-pagination>
   </div>
 </template>
 
@@ -18,6 +22,7 @@
   
   import Operation from "../../components/content/operation/Operation";
   import TablePagination from "../../components/content/table-pagination/TablePagination";
+  import {MessageBox} from "element-ui";
   export default {
     name: 'AdminStusInfo',
     components: {
@@ -41,10 +46,10 @@
       }
     },
     computed: {
-      ...mapGetters(['getUserInfo','getUsers']),
+      ...mapGetters(['getUsers']),
     },
     methods: {
-      ...mapActions(['reqStudents','reqInsertStu']),
+      ...mapActions(['reqStudents','reqInsertStu', 'reqDeleteStu', 'reqUpdateStu']),
       // 将子组件选择的搜索依据返回给父组件保存，可确保按照合适的要求去筛选数据
       changeValue(value) {
         this.value = value
@@ -64,7 +69,7 @@
         next = page  * count
         return arr.filter((item,index) => index >= prev && index < next)
       },
-      // 发送请求
+      // 发送增加学生的请求
       async sendRequest(user) {
         // 触发 actions 方法，发出请求
         let result = await this.reqInsertStu(user)
@@ -72,6 +77,31 @@
           this.filterUsers.unshift(user)
         }
         setMessage(result.message, 'success')
+      },
+      // 删除学生信息
+      deleteUser(user) {
+        MessageBox.confirm('您确定要删除该用户信息吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          let result = await this.reqDeleteStu(user.userid)
+          if(result.code === 200) {
+            setMessage(result.message, 'success')
+            let index = this.filterUsers.findIndex(item => item.userid === user.userid)
+            this.filterUsers.splice(index, 1)
+          }
+        }).catch(() => {
+          setMessage('谢谢你给了他一个机会', 'info')
+        })
+      },
+      async successForm(user) {
+        let result = await this.reqUpdateStu(user)
+        if (result.code === 200) {
+          setMessage(result.message, 'success')
+          let index = this.users.findIndex(item => item.userid === user.userid)
+          this.users.splice(index, 1 , user)
+        }
       }
     },
     created() {

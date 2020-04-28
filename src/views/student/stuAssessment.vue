@@ -1,13 +1,16 @@
 <template>
   <div class="student-assessment">
-    学员个人考勤
+    <calendar></calendar>
   </div>
 </template>
 
 <script>
+  import Calendar from 'components/comment/calendar/Calendar'
   export default {
     name: 'stuAssessment',
-    components: {},
+    components: {
+      Calendar
+    },
     data() {
       return {}
     },

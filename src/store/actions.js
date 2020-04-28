@@ -5,8 +5,23 @@ import {
   SETUSERINFO,
   SETSTUDENTS,
   SETWEATHER,
+  GETSELFINFO
 } from './mutation-types'
-import {reqLogin,reqStatus,reqInsertStu,reqStudents, reqWeather,reqUpdateStu,reqDeleteStu,reqStuById,reqGetTeas} from 'api/index.js'
+import {
+  reqLogin,
+  reqStatus,
+  reqInsertStu,
+  reqStudents,
+  reqWeather,
+  reqUpdateStu,
+  reqDeleteStu,
+  reqStuById,
+  reqGetTeas,
+  reqTeaById,
+  reqUpdateTea,
+  reqInsertTea,
+  reqDeleteTea
+} from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
     let result = await reqLogin(payload)
@@ -32,7 +47,7 @@ export default {
   async reqStuById({ commit }, userid) {
     let result = await reqStuById(userid)
     if (result.data) {
-      commit( SETSTUDENTS, result.data.items)
+      commit( GETSELFINFO, result.data.items)
     }
   },
   // 获取天气的api
@@ -56,5 +71,20 @@ export default {
     if (result.data) {
       commit(SETSTUDENTS, result.data.items)
     }
+  },
+  async reqTeaById({commit}, userid) {
+    let result = await reqTeaById(userid)
+    if (result.data) {
+      commit(GETSELFINFO, result.data.items)
+    }
+  },
+  async reqUpdateTea(context, user) {
+    return await reqUpdateTea(user)
+  },
+  async reqInsertTea({ commit }, user) {
+    return await reqInsertTea(user)
+  },
+  async reqDeleteTea(context, userid) {
+    return await reqDeleteTea(userid)
   }
 }

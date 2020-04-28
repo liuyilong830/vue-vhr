@@ -5,6 +5,7 @@
       class="my-table"
       :pageCount="pageCount"
       :users="filterUsers"
+      v-on="$listeners"
       v-if="this.filterUsers.length !== 0"></my-table>
     <div class="flex">
       <el-pagination

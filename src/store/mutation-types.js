@@ -4,3 +4,5 @@
 export const SETUSERINFO = 'setUserInfo'
 export const SETSTUDENTS  = 'setStudents'
 export const SETWEATHER = 'setWeather'
+export const GETSELFINFO = 'getselfinfo'
+export const SIGNOUT = 'signout'

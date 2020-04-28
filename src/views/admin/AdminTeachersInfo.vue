@@ -8,7 +8,11 @@
       @changeValue="changeValue"
       @inputKeyword="inputKeyword">
     </operation>
-    <table-pagination :filterUsers="filterUsers" @setPageCount="setPageCount"></table-pagination>
+    <table-pagination
+      :filterUsers="filterUsers"
+      @setPageCount="setPageCount"
+      @deleteUser="deleteUser"
+      @successForm="successForm"></table-pagination>
   </div>
 </template>
 
@@ -17,6 +21,7 @@
   import TablePagination from 'components/content/table-pagination/TablePagination'
   import {mapActions, mapGetters} from "vuex";
   import {setMessage} from '../../utils/index'
+  import {MessageBox} from "element-ui";
 
   export default {
     name: 'AdminTeachersInfo',
@@ -99,9 +104,12 @@
     },
     computed: {
       ...mapGetters(['getUsers']),
+      isType() {
+        return this.getUsers[0].type
+      },
     },
     methods: {
-      ...mapActions(['reqGetTeas']),
+      ...mapActions(['reqGetTeas', 'reqUpdateTea', 'reqInsertTea', 'reqDeleteTea']),
       // 将子组件选择的搜索依据返回给父组件保存，可确保按照合适的要求去筛选数据
       changeValue(value) {
         this.value = value
@@ -125,10 +133,41 @@
         next = page  * count
         return arr.filter((item,index) => index >= prev && index < next)
       },
-      // 添加请求
-      sendRequest(user) {
-    
+      // 添加学生的请求
+      async sendRequest(user) {
+        let result = await this.reqInsertTea(user)
+        if (result.code === 200) {
+          this.filterUsers.unshift(user)
+        }
+        setMessage(result.message, 'success')
       },
+      // 删除学生信息的请求
+      deleteUser(user) {
+        MessageBox.confirm('您确定要删除该用户信息吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          let result = await this.reqDeleteTea(user.userid)
+          if(result.code === 200) {
+            setMessage(result.message, 'success')
+            let index = this.filterUsers.findIndex(item => item.userid === user.userid)
+            this.filterUsers.splice(index, 1)
+          }
+        }).catch(() => {
+          setMessage('谢谢你给了他一个机会', 'info')
+        })
+      },
+      // 更新学生信息的请求
+      async successForm(user) {
+        console.log(user)
+        let result = await this.reqUpdateTea(user)
+        if (result.code === 200) {
+          setMessage(result.message, 'success')
+          let index = this.users.findIndex(item => item.userid === user.userid)
+          this.users.splice(index, 1 , user)
+        }
+      }
     },
     watch: {
       // 监听关键字的变化，并作出相应的改变

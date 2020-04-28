@@ -106,7 +106,6 @@
       }
     },
     methods: {
-      ...mapActions(['reqUpdateStu', 'reqDeleteStu']),
       // 格式化时间
       formatBirthday(time) {
         let t = new Date(time)
@@ -133,38 +132,18 @@
         this.isEdit = true
       },
       // 发送更新学生信息的请求
-      async successForm(user) {
-        // 发送成功之后，关闭弹框并把内容情况，发送失败的关闭弹框但不把内容清空
+      successForm(user) {
+        // 关闭弹窗
         this.isEdit = false
-        if (this.isType === 2) {
-          let result = await this.reqUpdateStu(user)
-          if (result.code === 200) {
-            setMessage(result.message, 'success')
-            let index = this.users.findIndex(item => item.userid === user.userid)
-            this.users.splice(index, 1 , user)
-          }
-        } else if (this.isType === 1) {
-          console.log(user)
-        }
+        // 将更新的操作留给最外层组件处理
         this.$emit('successForm', user)
-        
       },
       closeForm() {
         this.isEdit = false
       },
       deleteUser(user) {
-        MessageBox.confirm('您确定要删除该用户信息吗？删除后可在回收站查看！', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(async () => {
-          let result = await this.reqDeleteStu(user.userid)
-          if(result.code === 200) {
-            setMessage(result.message, 'success')
-          }
-        }).catch(() => {
-          setMessage('谢谢你给了他一个机会', 'info')
-        })
+        // 将删除的操作留给最外层组件处理
+        this.$emit('deleteUser', user)
       }
     },
   }
@@ -172,6 +151,6 @@
 
 <style lang="less" scoped>
   .table {
-    min-height: 640px;
+  
   }
 </style>

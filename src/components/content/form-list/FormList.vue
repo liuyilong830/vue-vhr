@@ -64,7 +64,7 @@
           <el-form-item label="老师姓名" prop="tname">
             <el-input v-model="ruleForm.tname"></el-input>
           </el-form-item>
-          <el-form-item label="学生学号" prop="userid">
+          <el-form-item label="老师工号" prop="userid">
             <el-input v-model="ruleForm.userid" maxlength="12" show-word-limit></el-input>
           </el-form-item>
         </div>
@@ -185,13 +185,20 @@
         }
         // 验证学号
         let testUserid = (rule, value, callback) => {
-          if (value === '') {
-            return callback(new Error('请输入学生的学号'))
-          } else if (value[0] !== '2' || value.length !== 12) {
-            return callback(new Error('学生学号是以2开头的12位数'))
-          } else {
-            callback()
+          if (this.isType === 1) {
+            if (value === '') {
+              return callback(new Error('请输入教师的工号'))
+            } else if (value[0] !== '1' || value.length !== 12) {
+              return callback(new Error('教师工号是以1开头的12位数'))
+            }
+          } else if (this.isType === 2) {
+            if (value === '') {
+              return callback(new Error('请输入学生的学号'))
+            } else if (value[0] !== '2' || value.length !== 12) {
+              return callback(new Error('学生学号是以2开头的12位数'))
+            }
           }
+          callback()
         }
         // 验证居住地
         let testAddress = (rule, value, callback) => {

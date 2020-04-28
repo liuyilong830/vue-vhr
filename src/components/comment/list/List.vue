@@ -1,10 +1,12 @@
 <template>
   <ul class="list">
-    <li class="list-item" v-for="(item) in list" :key="item.title">{{item.title}}</li>
+    <li class="list-item" v-for="(item) in list" :key="item.title" @click="handleClick(item)">{{item.title}}</li>
   </ul>
 </template>
 
 <script>
+  import {SIGNOUT} from '../../../store/mutation-types'
+  import Cookies from 'js-cookie'
   export default {
     name: 'List',
     components: {},
@@ -16,6 +18,19 @@
         type: Array,
         default() {
           return [{title: '默认文字'}]
+        }
+      }
+    },
+    methods: {
+      handleClick(value) {
+        switch (value.title) {
+          case '退出':
+            this.$store.commit(SIGNOUT)
+            Cookies.remove('userid')
+            Cookies.remove('type')
+            return this.$router.replace('/login')
+          default:
+            return;
         }
       }
     }

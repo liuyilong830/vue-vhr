@@ -68,9 +68,9 @@
       }
     },
     computed: {
-      ...mapGetters(['getUsers']),
+      ...mapGetters(['getSelfInfo']),
       isType() {
-        return this.getUsers[0].type
+        return this.getSelfInfo[0].type
       },
       // 按照指定的格式，筛选出从 prev 到 next 之间的数据用来展示，因为在分页的时候需要切换
       showStudents() {

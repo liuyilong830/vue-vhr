@@ -26,3 +26,11 @@ export const reqUpdateStu = (user) => ajax('/updateStu', user, 'post')
 export const reqDeleteStu = (userid) => ajax('/deleteStu', {userid}, 'post')
 // 获取所有教师的信息
 export const reqGetTeas = () => ajax('/teasInfo')
+// 根据userid获取指定教师的信息
+export const reqTeaById = (userid) => ajax('/teaById', {userid})
+// 更新某一个学生的信息
+export const reqUpdateTea = (user) => ajax('/updateTea', user, 'post')
+// 新增一名老师
+export const reqInsertTea = (user) => ajax('/insertTea', user, 'post')
+// 删除一名教师
+export const reqDeleteTea = (userid) => ajax('/deleteTea', {userid}, 'post')

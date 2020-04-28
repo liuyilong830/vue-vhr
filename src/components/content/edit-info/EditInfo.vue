@@ -149,9 +149,13 @@
       },
     },
     computed: {
-      ...mapGetters(['getUserInfo','getUsers']),
+      ...mapGetters(['getUserInfo','getSelfInfo', 'getUsers']),
       isType() {
-        return this.getUsers[0].type
+        if (this.getSelfInfo.length !== 0) {
+          return this.getSelfInfo[0].type
+        } else if (this.getUsers.length !== 0) {
+          return this.getUsers[0].type
+        }
       },
       setRuleForm() {
         if (this.isType === 2) {
