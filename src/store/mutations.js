@@ -6,7 +6,9 @@ import {
   SETSTUDENTS,
   SETWEATHER,
   GETSELFINFO,
-  SIGNOUT
+  SIGNOUT,
+  GETTASKS,
+  TASKSTATUS
 } from './mutation-types'
 export default {
   [SETUSERINFO](state, payload) {
@@ -26,5 +28,11 @@ export default {
     state.users = []
     state.weather = {}
     state.self = []
+  },
+  [GETTASKS](state, tasks) {
+    state.tasks = tasks
+  },
+  [TASKSTATUS](state, taskStatus) {
+    state.taskStatus = taskStatus
   }
 }

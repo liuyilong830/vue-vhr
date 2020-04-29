@@ -12,6 +12,8 @@ const state = {
   users: [],  // 获取到的所有用户信息
   weather: {},  // 天气信息
   self: [],  // 获取学生教师自己的信息
+  tasks: [],  // 保存具体某一天的所有的考勤任务
+  taskStatus: [],  // 保存某一个学生在指定日期中签到情况
 }
 
 export default new Vuex.Store({

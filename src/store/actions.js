@@ -5,7 +5,9 @@ import {
   SETUSERINFO,
   SETSTUDENTS,
   SETWEATHER,
-  GETSELFINFO
+  GETSELFINFO,
+  GETTASKS,
+  TASKSTATUS
 } from './mutation-types'
 import {
   reqLogin,
@@ -20,7 +22,9 @@ import {
   reqTeaById,
   reqUpdateTea,
   reqInsertTea,
-  reqDeleteTea
+  reqDeleteTea,
+  reqGetTaskByTime,
+  reqTaskStatusById
 } from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
@@ -86,5 +90,17 @@ export default {
   },
   async reqDeleteTea(context, userid) {
     return await reqDeleteTea(userid)
+  },
+  async reqGetTaskByTime({ commit }, time) {
+    let result = await reqGetTaskByTime(time)
+    if (result.code === 200) {
+      commit(GETTASKS, result.data.items)
+    }
+  },
+  async reqTaskStatusById({ commit }, payload) {
+    let result = await reqTaskStatusById(payload.userid, payload.time)
+    if (result.code === 200) {
+      commit(TASKSTATUS, result.data.items)
+    }
   }
 }

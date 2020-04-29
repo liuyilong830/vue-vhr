@@ -34,3 +34,7 @@ export const reqUpdateTea = (user) => ajax('/updateTea', user, 'post')
 export const reqInsertTea = (user) => ajax('/insertTea', user, 'post')
 // 删除一名教师
 export const reqDeleteTea = (userid) => ajax('/deleteTea', {userid}, 'post')
+// 根据 time 时间戳来获取指定日期的任务
+export const reqGetTaskByTime = (time) => ajax('/getTask', {time})
+// 根据 userid 和 time 查询指定学生在某一日的签到情况
+export const reqTaskStatusById = (userid, time) => ajax('/getTaskById', {userid, time})

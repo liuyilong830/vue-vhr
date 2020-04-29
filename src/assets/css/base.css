@@ -9,6 +9,16 @@
 .el-cascader {
   width: 100%;
 }
+.el-drawer__body {
+  box-sizing: border-box;
+  padding: 10px;
+}
+.el-collapse-item__header {
+  height: 30px;
+}
+.el-collapse-item__content {
+  padding-bottom: 15px;
+}
 html {
   /*标准字体大小设置 14 像素「rem 参照对象」*/
   font-size: 14px;

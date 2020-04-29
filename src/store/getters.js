@@ -10,5 +10,11 @@ export default {
   },
   getSelfInfo(state) {
     return state.self
+  },
+  getTasks(state) {
+    return state.tasks
+  },
+  getTaskStatus(state) {
+    return state.taskStatus
   }
 }

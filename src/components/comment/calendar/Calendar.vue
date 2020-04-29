@@ -107,12 +107,16 @@
           this.currentArr.push(obj)
         }
       },
+      // 展示每一个 tr 中数组的元素
       getTableTrArr(index) {
         return this.currentArr.filter((time,i) => i >= (index-1)*7 && i < index*7)
       },
+      // 点击每一个 td 时，将 this.currentTime 设置为当前的日期
       handleClick(time) {
         this.currentTime = time
+        this.$emit('getCurrentTime', time)
       },
+      // 当改变月份的时候触发，效果为点击上方的 '上个月' '今天' '下个月' 按钮时触发
       changeMonth(num) {
         let {year,month} = this.currentTime
         switch (num) {
@@ -130,6 +134,7 @@
             return;
         }
       },
+      // 将 this.currentTime 设置为当前月份的上个月的1号的数据
       beforeMonth(year, month) {
         if (month -1 < 1) {
           year = year - 1
@@ -143,6 +148,7 @@
         }
         this.currentTime = {year: before_time.getFullYear(), month: before_time.getMonth()+1, date: before_time.getDate()}
       },
+      // 将 this.currentTime 设置为当前月份的下个月的1号的数据
       afterMonth(year, month) {
         if (month +1 > 12) {
           year = year + 1
@@ -158,6 +164,7 @@
       }
     },
     watch: {
+      // 每当 this.currentTime 的值中月份或年份发生了变化时，将触发渲染数组的更新
       currentTime(val, oldVal) {
         if (val.year !== oldVal.year || val.month !== oldVal.month) {
           this.changeCurrentArr(val.year, val.month)
@@ -168,7 +175,6 @@
       let time = new Date()
       this.currentTime = {year: time.getFullYear(), month: time.getMonth()+1, date: time.getDate()}
       this.today = {...this.currentTime}
-      // this.changeCurrentArr(this.currentTime.year, this.currentTime.month)
     }
   }
 </script>
@@ -235,6 +241,7 @@
               border: 1px solid #d0cece;
               &:hover {
                 background-color: #f2f8fe;
+                cursor: pointer;
               }
             }
             .left-border {
