@@ -17,9 +17,10 @@
                 </el-collapse>
               </div>
               <div class="content-right">
-                <el-button size="mini" type="success" icon="el-icon-check" disabled v-if="taskStatus(task.id)"></el-button>
-                <el-button size="mini" v-else-if="flagSign(task.endTime)" @click="handleClick">签到</el-button>
-                <el-button size="mini" type="danger" disabled v-else>已结束</el-button>
+                <el-button size="mini" type="success" icon="el-icon-check" disabled v-if="task.flag"></el-button>
+                <el-button size="mini" v-else-if="flag" :loading="true"></el-button>
+                <el-button size="mini" v-else-if="flagSign(task.endTime)" @click="handleClick(task)">签到</el-button>
+                <el-button size="mini" type="danger" disabled v-else>未签到</el-button>
               </div>
             </div>
             <div class="issued-person">
@@ -71,6 +72,7 @@
     Collapse,
     CollapseItem,
   } from 'element-ui'
+  import {setMessage} from '../../../utils/index'
   
   import { mapGetters, mapActions } from 'vuex'
   export default {
@@ -86,8 +88,8 @@
     },
     data() {
       return {
-        flag: false,
-        tasks: []
+        tasks: [],
+        flag: false
       }
     },
     props: {
@@ -96,6 +98,9 @@
         default() {
           return {}
         }
+      },
+      drawerRef: {
+        type: Object
       }
     },
     computed: {
@@ -105,7 +110,7 @@
       }
     },
     methods: {
-      ...mapActions(['reqGetTaskByTime', 'reqTaskStatusById']),
+      ...mapActions(['reqGetTaskByTime', 'reqTaskStatusById', 'reqInsertAtd']),
       getTime(time, falg) {
         time = new Date(time)
         let year = this.formatTimeNum(time.getFullYear())
@@ -125,8 +130,21 @@
         }
         return  num
       },
-      handleClick() {
+      async handleClick(task) {
+        if (Date.now() > task.endTime) {
+          this.drawerRef.closeDrawer()
+          return setMessage('已经过了签到的时间，下次记得早点来哟', 'error')
+        }
         this.flag = true
+        let {userid} = this.getUserInfo
+        let result = await this.reqInsertAtd({taskid: task.id, userid})
+        if (result.code === 200) {
+          task.flag = true
+        } else {
+          this.drawerRef.closeDrawer()
+          setMessage(result.message, 'error')
+        }
+        this.flag = false
       },
       taskStatus(id) {
         return this.getTaskStatus.some(task => task.taskid === id)
@@ -136,7 +154,7 @@
       }
     },
     watch: {
-      getTasks(val) {
+      getTaskStatus(val) {
         let arr = [...val]
         this.tasks = arr.sort((num1, num2) => num1.startTime - num2.startTime)
       }
@@ -144,7 +162,6 @@
     async created() {
       let time = new Date(`${this.time.year}-${this.time.month}-${this.time.date}`).getTime()
       let {userid} = this.getUserInfo
-      await this.reqGetTaskByTime(time)
       await this.reqTaskStatusById({userid, time})
     },
     
@@ -166,7 +183,7 @@
         justify-content: space-between;
         align-items: center;
         .content-left {
-          width: calc(100% - 65px);
+          width: calc(100% - 85px);
           height: 100%;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -175,7 +192,7 @@
           -webkit-box-orient: vertical;
         }
         .content-right {
-          width: 65px;
+          width: 85px;
           height: 32px;
           display: flex;
           justify-content: flex-end;

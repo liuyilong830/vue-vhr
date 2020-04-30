@@ -38,3 +38,5 @@ export const reqDeleteTea = (userid) => ajax('/deleteTea', {userid}, 'post')
 export const reqGetTaskByTime = (time) => ajax('/getTask', {time})
 // 根据 userid 和 time 查询指定学生在某一日的签到情况
 export const reqTaskStatusById = (userid, time) => ajax('/getTaskById', {userid, time})
+// 根据 taskid userid day 字段添加一条签到信息
+export const reqInsertAtd = ({taskid, userid}) => ajax('/insertAtd', {taskid, userid}, 'post')

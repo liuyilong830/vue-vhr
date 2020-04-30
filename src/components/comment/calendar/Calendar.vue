@@ -28,7 +28,15 @@
                 active: currentTime.year === time.year && currentTime.month === time.month && currentTime.date === time.date
               }"
               @click="handleClick(time)">
-              {{time.date}}
+              <div class="td-div">
+                <el-tag
+                  size="mini"
+                  v-if="today.year === time.year && today.month === time.month && today.date === time.date">
+                  {{time.date}}
+                </el-tag>
+                <p v-else>{{time.date}}</p>
+<!--                <span class="span">2个未签</span>-->
+              </div>
             </td>
           </tr>
         </tbody>
@@ -40,13 +48,16 @@
 <script>
   import {
     ButtonGroup,
-    Button
+    Button,
+    Tag,
   } from 'element-ui'
+  import {mapGetters} from 'vuex'
   export default {
     name: 'Calendar',
     components: {
       'elButton': Button,
-      'elButtonGroup': ButtonGroup
+      'elButtonGroup': ButtonGroup,
+      'elTag': Tag,
     },
     data() {
       return {
@@ -61,6 +72,9 @@
         currentMonthTime: 0,  // 当前被选择的月首的时间戳
         currentArr: [],  // 存放当前被选择的月份的日期数组，数组中的每一个元素是一个对象
       }
+    },
+    computed: {
+      ...mapGetters(['getTaskStatus'])
     },
     methods: {
       // 获取当前被选中月份的数组列表
@@ -234,14 +248,22 @@
               padding: 8px;
               flex: 1;
               height: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              font-size: 16px;
               border: 1px solid #d0cece;
               &:hover {
                 background-color: #f2f8fe;
                 cursor: pointer;
+              }
+              .td-div {
+                height: 100%;
+                display: flex;
+                font-size: 16px;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
+                .span {
+                  font-size: 12px;
+                  color: #c0c4cc;
+                }
               }
             }
             .left-border {

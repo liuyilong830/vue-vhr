@@ -43,6 +43,8 @@
           return 'icon-bingbao'
         } else if (this.weather.wea_img == 'yin') {
           return 'icon-yintian'
+        } else if (this.weather.wea_img == 'yun') {
+          return 'icon-yintian'
         }
       }
     },

@@ -19,6 +19,13 @@
 .el-collapse-item__content {
   padding-bottom: 15px;
 }
+.el-drawer__header {
+  margin-bottom: 20px;
+}
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner {
+  width: 100%;
+  margin-bottom: 10px;
+}
 html {
   /*标准字体大小设置 14 像素「rem 参照对象」*/
   font-size: 14px;

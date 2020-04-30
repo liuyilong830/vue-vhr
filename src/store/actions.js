@@ -24,7 +24,8 @@ import {
   reqInsertTea,
   reqDeleteTea,
   reqGetTaskByTime,
-  reqTaskStatusById
+  reqTaskStatusById,
+  reqInsertAtd
 } from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
@@ -102,5 +103,8 @@ export default {
     if (result.code === 200) {
       commit(TASKSTATUS, result.data.items)
     }
+  },
+  async reqInsertAtd(context, payload) {
+    return await reqInsertAtd(payload)
   }
 }

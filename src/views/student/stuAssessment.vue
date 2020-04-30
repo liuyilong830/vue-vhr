@@ -5,12 +5,13 @@
     <el-drawer
       :visible.sync="drawer"
       destroy-on-close
+      ref="drawer"
       size="500px">
       <template v-slot:title>
         <h2 class="drawer-title">{{formatCurrentTime}}</h2>
       </template>
       <div class="tasks">
-        <attendance-task :time="currentTime" />
+        <attendance-task :time="currentTime" :drawerRef="drawerRef" />
       </div>
     </el-drawer>
   </div>
@@ -19,8 +20,6 @@
 <script>
   import {
     Drawer,
-    Timeline,
-    TimelineItem
   } from 'element-ui'
   import Calendar from 'components/comment/calendar/Calendar'
   import AttendanceTask from "components/content/attendance-task/AttendanceTask";
@@ -28,15 +27,14 @@
     name: 'stuAssessment',
     components: {
       'elDrawer': Drawer,
-      'elTimeline': Timeline,
-      'elTimelineItem': TimelineItem,
       Calendar,
       AttendanceTask,
     },
     data() {
       return {
         drawer: false,
-        currentTime: {}
+        currentTime: {},
+        drawerRef: null
       }
     },
     computed: {
@@ -49,6 +47,9 @@
         this.drawer = true
         this.currentTime = time
       }
+    },
+    updated() {
+      this.drawerRef = this.$refs.drawer
     }
   }
 </script>
