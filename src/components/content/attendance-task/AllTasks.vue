@@ -15,7 +15,7 @@
             <el-card :body-style="{ padding: '10px' }">
               <div class="card">
                 <div class="task-title">
-                  <span>{{task.describe}}</span>
+                  <span>{{task.title}}</span>
                   <span>-</span>
                   <p class="describe">{{task.content}}</p>
                 </div>
@@ -24,24 +24,16 @@
                     <el-collapse>
                       <el-collapse-item>
                         <template slot="title">
-                          <span>未签到的学员</span>
-                        </template>
-                        <div>{{task.content}}</div>
-                      </el-collapse-item>
-                      <el-collapse-item>
-                        <template slot="title">
-                          <span>已签到的学员</span>
+                          <span>{{task.title}}</span>
                         </template>
                         <div>{{task.content}}</div>
                       </el-collapse-item>
                     </el-collapse>
                   </div>
-                  <!--<div class="content-right">
-                    <el-button size="mini">详情</el-button>
-                  </div>-->
                 </div>
                 <div class="issued-person">
                   <p>该任务结束于：{{getTime(task.endTime, true)}}</p>
+                  <el-button type="info" size="mini" @click="queryTask(task.id)">签到情况</el-button>
                 </div>
               </div>
             </el-card>
@@ -68,24 +60,16 @@
                     <el-collapse>
                       <el-collapse-item>
                         <template slot="title">
-                          <span>未签到的学员</span>
-                        </template>
-                        <div>{{task.content}}</div>
-                      </el-collapse-item>
-                      <el-collapse-item>
-                        <template slot="title">
-                          <span>已签到的学员</span>
+                          <span>{{task.title}}</span>
                         </template>
                         <div>{{task.content}}</div>
                       </el-collapse-item>
                     </el-collapse>
                   </div>
-                  <!--<div class="content-right">
-                    <el-button size="mini">详情</el-button>
-                  </div>-->
                 </div>
                 <div class="issued-person">
                   <p>该任务结束于：{{getTime(task.endTime, true)}}</p>
+                  <el-button type="info" size="mini" @click="queryTask(task.id)">签到情况</el-button>
                 </div>
               </div>
             </el-card>
@@ -111,6 +95,7 @@
     ButtonGroup,
     Collapse,
     CollapseItem,
+    Tag,
   } from 'element-ui'
   import {mapActions, mapGetters} from "vuex";
 
@@ -124,6 +109,7 @@
       'elButtonGroup': ButtonGroup,
       'elCollapse': Collapse,
       'elCollapseItem': CollapseItem,
+      'elTag': Tag,
     },
     data() {
       return {
@@ -141,6 +127,7 @@
     },
     computed: {
       ...mapGetters(['getTasks', 'getUserInfo']),
+      
     },
     methods: {
       ...mapActions(['reqGetTaskByTime']),
@@ -165,6 +152,9 @@
       },
       releaseClick() {
         this.$emit('releaseClick')
+      },
+      queryTask(id) {
+        this.$emit('queryTask', id)
       }
     },
     watch: {
@@ -195,6 +185,34 @@
       }
     }
     .tasks {
+      height: calc(100% - 50px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      &::-webkit-scrollbar { // 滚动条整体的样式
+        width: 8px;
+        height: 20px;
+      }
+      &::-webkit-scrollbar-button {
+        display: none;
+      }
+      &::-webkit-scrollbar-track {  // 外层轨道的样式
+        background: #4b4b4e;
+        border-radius: 40px;
+      }
+      &::-webkit-scrollbar-track-piece {  // 内层轨道的样式（不是可拖拽部分）
+        background: #f1f1f1;
+        border-radius: 20px;
+      }
+      &::-webkit-scrollbar-thumb {  // 可拖拽部分的样式
+        background: #cecece;
+        border-radius: 50px;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background: #9b9b9c;
+      }
+      &::-webkit-scrollbar-corner {
+        background: #fff;
+      }
       .all-by {
         h3 {
           padding-bottom: 10px;
@@ -224,11 +242,6 @@
             .content-left {
               width: 100%;
               height: 100%;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              -webkit-line-clamp: 2;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
             }
             .content-right {
               width: 85px;
@@ -239,7 +252,12 @@
             }
           }
           .issued-person {
-            color: #999999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            p {
+              color: #999999;
+            }
           }
         }
       }

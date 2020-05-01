@@ -16,5 +16,11 @@ export default {
   },
   getTaskStatus(state) {
     return state.taskStatus
+  },
+  getAttendanceType(state) {
+    return state.attendance_type
+  },
+  getAllCourse(state) {
+    return state.courses
   }
 }

@@ -40,3 +40,9 @@ export const reqGetTaskByTime = (time) => ajax('/getTask', {time})
 export const reqTaskStatusById = (userid, time) => ajax('/getTaskById', {userid, time})
 // 根据 taskid userid day 字段添加一条签到信息
 export const reqInsertAtd = ({taskid, userid}) => ajax('/insertAtd', {taskid, userid}, 'post')
+// 根据 attendance_time 表中所有数据，发布一条新的考勤任务
+export const reqInsertTask = (task) => ajax('/insertTask', task, 'post')
+// 根据 id 获取该任务中已签到和未签到的学员名单
+export const reqGetCompletion = (id) => ajax('/getCompletion', {id})
+// 获取所有课程信息
+export const reqGetCourse = () => ajax('/cousInfo')

@@ -26,6 +26,35 @@
   width: 100%;
   margin-bottom: 10px;
 }
+.inner-drawer-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.el-table__body-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.el-table__body-wrapper::-webkit-scrollbar-button {
+  display: none;
+}
+.el-table__body-wrapper::-webkit-scrollbar-track {
+background: #4b4b4e;
+  border-radius: 40px;
+}
+.el-table__body-wrapper::-webkit-scrollbar-track-piece {
+background: #f1f1f1;
+  border-radius: 20px;
+}
+.el-table__body-wrapper::-webkit-scrollbar-thumb {
+background: #cecece;
+  border-radius: 50px;
+}
+.el-table__body-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #9b9b9c;
+}
+.el-table__body-wrapper::-webkit-scrollbar-corner {
+  background: #fff;
+}
 html {
   /*标准字体大小设置 14 像素「rem 参照对象」*/
   font-size: 14px;

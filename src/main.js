@@ -4,8 +4,10 @@ import router from './router'
 import store from './store/store'
 // import './mock/mock.js'
 import animated from 'animate.css'
+import VePie from 'v-charts/lib/pie.common'
 
 Vue.use(animated)
+Vue.component(VePie.name, VePie)
 
 import './assets/css/base.css'
 

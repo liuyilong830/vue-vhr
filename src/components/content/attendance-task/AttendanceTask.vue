@@ -4,13 +4,13 @@
       <el-timeline-item :timestamp="`${getTime(task.startTime)} - ${task.tname}`" placement="top" v-for="task in tasks" :key="task.startTime">
         <el-card :body-style="{ padding: '10px' }">
           <div class="card">
-            <h4 class="task-title">{{task.describe}}</h4>
+            <h4 class="task-title">{{task.title}}</h4>
             <div class="content">
               <div class="content-left">
                 <el-collapse>
                   <el-collapse-item>
                     <template slot="title">
-                      <span>{{task.describe}}</span>
+                      <span>{{task.title}}</span>
                     </template>
                     <div>{{task.content}}</div>
                   </el-collapse-item>
@@ -29,29 +29,6 @@
           </div>
         </el-card>
       </el-timeline-item>
-      <!--<el-timeline-item timestamp="2018/4/3" placement="top">
-        <el-card :body-style="{ padding: '10px' }">
-          <div class="card">
-            <h4 class="task-title">每日签到</h4>
-            <div class="content">
-              <div class="content-left">
-                <el-collapse>
-                  <el-collapse-item>
-                    <template slot="title">
-                      <span>签到</span>
-                    </template>
-                    <div>每日签到</div>
-                  </el-collapse-item>
-                </el-collapse>
-              </div>
-              <div class="content-right">
-                <el-button size="mini">签到</el-button>
-              </div>
-            </div>
-            <p class="issued-person">辅导员 提交于 2018/4/12 20:46</p>
-          </div>
-        </el-card>
-      </el-timeline-item>-->
     </el-timeline>
   </div>
   <div class="normal" v-else>

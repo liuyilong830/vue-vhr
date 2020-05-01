@@ -7,7 +7,9 @@ import {
   SETWEATHER,
   GETSELFINFO,
   GETTASKS,
-  TASKSTATUS
+  TASKSTATUS,
+  COMPLETION,
+  ALLCOURSE
 } from './mutation-types'
 import {
   reqLogin,
@@ -25,7 +27,10 @@ import {
   reqDeleteTea,
   reqGetTaskByTime,
   reqTaskStatusById,
-  reqInsertAtd
+  reqInsertAtd,
+  reqInsertTask,
+  reqGetCompletion,
+  reqGetCourse
 } from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
@@ -94,17 +99,33 @@ export default {
   },
   async reqGetTaskByTime({ commit }, time) {
     let result = await reqGetTaskByTime(time)
-    if (result.code === 200) {
+    if (result.data) {
       commit(GETTASKS, result.data.items)
     }
   },
   async reqTaskStatusById({ commit }, payload) {
     let result = await reqTaskStatusById(payload.userid, payload.time)
-    if (result.code === 200) {
+    if (result.data) {
       commit(TASKSTATUS, result.data.items)
     }
   },
   async reqInsertAtd(context, payload) {
     return await reqInsertAtd(payload)
+  },
+  async reqInsertTask(context, task) {
+    return await reqInsertTask(task)
+  },
+  // 根据 id 查询该考勤任务已签到和未签到学员名单
+  async reqGetCompletion({ commit }, id) {
+    let result = await reqGetCompletion(id)
+    if (result.data) {
+      commit(COMPLETION, result.data)
+    }
+  },
+  async reqGetCourse({ commit }) {
+    let result = await reqGetCourse()
+    if (result.data) {
+      commit(ALLCOURSE, result.data.items)
+    }
   }
 }

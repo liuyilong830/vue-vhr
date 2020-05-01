@@ -8,7 +8,10 @@ import {
   GETSELFINFO,
   SIGNOUT,
   GETTASKS,
-  TASKSTATUS
+  TASKSTATUS,
+  PUSHTASK,
+  COMPLETION,
+  ALLCOURSE
 } from './mutation-types'
 export default {
   [SETUSERINFO](state, payload) {
@@ -34,5 +37,14 @@ export default {
   },
   [TASKSTATUS](state, taskStatus) {
     state.taskStatus = taskStatus
+  },
+  [PUSHTASK](state, task) {
+    state.tasks.push(task)
+  },
+  [COMPLETION](state, payload) {
+    state.attendance_type = payload
+  },
+  [ALLCOURSE](state, courses) {
+    state.courses = courses
   }
 }

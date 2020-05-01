@@ -10,8 +10,8 @@
           end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="考勤标题" prop="describe" class="public">
-        <el-input placeholder="请输入考勤的标题" v-model="ruleForm.describe" clearable></el-input>
+      <el-form-item label="考勤标题" prop="title" class="public">
+        <el-input placeholder="请输入考勤的标题" v-model="ruleForm.title" clearable></el-input>
       </el-form-item>
       <el-form-item label="考勤内容" prop="content" class="public">
         <el-input type="textarea" :rows="4" placeholder="请输入考勤的内容" v-model="ruleForm.content"></el-input>
@@ -35,6 +35,7 @@
     Form,
     FormItem,
   } from 'element-ui'
+  import {mapGetters} from 'vuex'
   export default {
     name: 'ReleaseTasks',
     components: {
@@ -48,7 +49,7 @@
     data() {
       return {
         ruleForm: {
-          describe: '',
+          title: '',
           content: '',
           date: [
             new Date(),
@@ -56,7 +57,7 @@
           ]
         },
         rules: {
-          describe: [
+          title: [
             { required: true, message: '请简述考勤', trigger: 'blur' },
           ],
           content: [
@@ -68,11 +69,18 @@
         },
       }
     },
+    computed: {
+      ...mapGetters(['getUserInfo'])
+    },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.ruleForm)
+            let {title, content, date} = this.ruleForm
+            let {userid} = this.getUserInfo
+            let startTime = date[0].getTime()
+            let endTime = date[1].getTime()
+            this.$emit('submitForm', {userid, startTime, endTime, title, content})
           }
         });
       },

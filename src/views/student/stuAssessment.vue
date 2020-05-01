@@ -62,6 +62,33 @@
     }
     .tasks {
       height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      &::-webkit-scrollbar { // 滚动条整体的样式
+        width: 8px;
+        height: 20px;
+      }
+      &::-webkit-scrollbar-button {
+        display: none;
+      }
+      &::-webkit-scrollbar-track {  // 外层轨道的样式
+        background: #4b4b4e;
+        border-radius: 40px;
+      }
+      &::-webkit-scrollbar-track-piece {  // 内层轨道的样式（不是可拖拽部分）
+        background: #f1f1f1;
+        border-radius: 20px;
+      }
+      &::-webkit-scrollbar-thumb {  // 可拖拽部分的样式
+        background: #cecece;
+        border-radius: 50px;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background: #9b9b9c;
+      }
+      &::-webkit-scrollbar-corner {
+        background: #fff;
+      }
     }
   }
 </style>
