@@ -22,5 +22,8 @@ export default {
   },
   getAllCourse(state) {
     return state.courses
+  },
+  getImgPath(state) {
+    return state.imgFile;
   }
 }

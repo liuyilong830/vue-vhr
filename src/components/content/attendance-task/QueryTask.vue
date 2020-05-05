@@ -46,25 +46,25 @@
     computed: {
       ...mapGetters(['getTasks', 'getUserInfo', 'getAttendanceType']),
       showCompType() {
-        if (this.getAttendanceType) {
+        if (Object.keys(this.getAttendanceType).length !== 0) {
           return this.getAttendanceType.complete
         }
         return []
       },
       showInCompType() {
-        if (this.getAttendanceType) {
+        if (Object.keys(this.getAttendanceType).length !== 0) {
           return this.getAttendanceType.incomplete
         }
         return []
       },
       compNum() {
-        if (this.getAttendanceType) {
+        if (Object.keys(this.getAttendanceType).length !== 0) {
           return this.getAttendanceType.complete.length
         }
         return 0
       },
       incompNum() {
-        if (this.getAttendanceType) {
+        if (Object.keys(this.getAttendanceType).length !== 0) {
           return this.getAttendanceType.incomplete.length
         }
         return 0

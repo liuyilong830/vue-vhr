@@ -11,7 +11,7 @@ import {
   TASKSTATUS,
   PUSHTASK,
   COMPLETION,
-  ALLCOURSE
+  ALLCOURSE, UPLOADIMG
 } from './mutation-types'
 export default {
   [SETUSERINFO](state, payload) {
@@ -46,5 +46,8 @@ export default {
   },
   [ALLCOURSE](state, courses) {
     state.courses = courses
+  },
+  [UPLOADIMG](state, payload) {
+    state.imgFile = payload.file
   }
 }

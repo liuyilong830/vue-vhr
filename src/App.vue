@@ -5,5 +5,5 @@
 </template>
 
 <style scoped>
-  @import "http://at.alicdn.com/t/font_1748178_on290807p2d.css";
+  @import "http://at.alicdn.com/t/font_1748178_r5rlrgeqvwe.css";
 </style>

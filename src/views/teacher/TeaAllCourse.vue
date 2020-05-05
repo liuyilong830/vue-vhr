@@ -3,29 +3,56 @@
     <div class="pie-chart">
       <h2 class="title">各学院课程数量统计</h2>
       <ve-pie :data="chartData" :events="chartEvents"></ve-pie>
+      <div class="normal">
+        <div class="flex">
+          <h2 class="title">当前选中的课程：{{course.cname? course.cname : '无'}}</h2>
+          <el-button-group class="btn-group">
+            <el-button type="primary" :disabled="Object.keys(course).length === 0" @click="modifyCourse">编辑</el-button>
+            <el-button type="primary" v-if="getUserInfo.type === 3" @click="removeCourse">删除</el-button>
+          </el-button-group>
+        </div>
+        <div class="flex">  <!--  v-if="getUserInfo.type === 3" -->
+          <h2 class="title">是否添加新的课程</h2>
+          <el-button type="primary" @click="addCourse">添加</el-button>
+        </div>
+      </div>
     </div>
     <div class="right">
       <h2 class="title">{{name}}课程：共计{{filterCourses.length}}门</h2>
       <div class="flex">
         <div class="normal" v-for="course in filterCourses" :key="course.id">
-          <div class="card">
-    
-          </div>
+          <card :course="course" v-if="Object.keys(course).length !== 0" @changeContent="changeContent"/>
         </div>
       </div>
     </div>
+    <el-dialog
+      :title="getTitle"
+      :visible.sync="showModify"
+      :destroy-on-close="true"
+      width="700px"
+      @close="closeDialog"
+      center>
+      <div>
+        <course-form @sucModify="sucModify" @insertCourse="insertCourse" :changeType="showAdd" :course="course"/>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import {
-    Card
-  } from 'element-ui'
+  import CourseForm from "../../components/content/course-form/CourseForm";
+  import Card from "../../components/content/card/Card";
   import {mapActions, mapGetters} from 'vuex'
+  import {Button, ButtonGroup, Dialog} from "element-ui";
+  import {setMessage} from '../../utils/index'
   export default {
     name: 'TeaAllCourse',
     components: {
-      'elCard': Card
+      'elButtonGroup': ButtonGroup,
+      'elButton': Button,
+      'elDialog': Dialog,
+      Card,
+      CourseForm
     },
     data() {
       this.chartEvents = {
@@ -45,14 +72,23 @@
         },
         name: '电信学院',  // 学院名称
         courses: [],
-        filterCourses: []
+        filterCourses: [],
+        course: {},
+        showModify: false,
+        showAdd: false
       }
     },
     computed: {
-      ...mapGetters(['getAllCourse'])
+      ...mapGetters(['getAllCourse', 'getUserInfo']),
+      getTitle() {
+        if (this.showAdd) {
+          return `添加一门课程`
+        }
+        return `修改${this.course.cname}的课程信息`
+      }
     },
     methods: {
-      ...mapActions(['reqGetCourse']),
+      ...mapActions(['reqGetCourse', 'reqInsertCourse', 'reqUpdateCourse']),
       changePlace(event) {
         this.name = event.name
         this.filterCourses = this.courses.filter(course => course.place === this.name)
@@ -61,6 +97,40 @@
         this.chartData.rows.forEach(row => {
           row['课程数量'] = arr.filter(course => course.place === row['地点']).length
         })
+      },
+      changeContent(course) {
+        this.course = course
+      },
+      modifyCourse() {
+        this.showModify = true
+      },
+      addCourse() {
+        this.showAdd = this.showModify = true
+      },
+      closeDialog() {
+        this.showAdd = false
+        this.course = {}
+      },
+      async sucModify(course) {
+        this.showModify = false
+        let result = await this.reqUpdateCourse(course)
+        if (result.code === 200) {
+          setMessage(result.message, 'success')
+          let index = this.courses.findIndex(item => item.id === course.id)
+          this.courses.splice(index, 1, course)
+        }
+      },
+      removeCourse(course) {
+        console.log(course)
+      },
+      async insertCourse(course) {
+        console.log(course)
+        this.showModify = false
+        let result = await this.reqInsertCourse(course)
+        if (result.code === 200) {
+          setMessage(result.message, 'success')
+          this.courses.unshift(course)
+        }
       }
     },
     watch: {
@@ -82,14 +152,36 @@
     display: flex;
     .pie-chart {
       width: 450px;
+      min-width: 450px;
       .title {
         font-size: 20px;
         font-weight: 600;
         margin-bottom: 10px;
       }
+      .normal {
+        box-sizing: border-box;
+        padding-right: 10px;
+        .flex {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          .title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 0;
+          }
+        }
+      }
+      .form {
+        height: calc(100% - 436px);
+        box-sizing: border-box;
+        padding: 10px 10px 0 0;
+      }
     }
     .right {
       width: calc(100% - 450px);
+      min-width: 880px;
       .title {
         font-size: 20px;
         font-weight: 600;
@@ -136,13 +228,6 @@
           justify-content: center;
           align-items: center;
           margin-top: 20px;
-          .card {
-            width: 270px;
-            height: 320px;
-            border-radius: 6px;
-            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
-          }
         }
       }
     }

@@ -46,3 +46,9 @@ export const reqInsertTask = (task) => ajax('/insertTask', task, 'post')
 export const reqGetCompletion = (id) => ajax('/getCompletion', {id})
 // 获取所有课程信息
 export const reqGetCourse = () => ajax('/cousInfo')
+// 更新某一个课程信息
+export const reqUpdateCourse = (course) => ajax('/updateCou', course, 'post')
+// 新增一门课程信息
+export const reqInsertCourse = (course) => ajax('/insertCou', course, 'post')
+// 上传图片并返回path
+export const reqUploadImg = (file) => ajax('/upload', file, 'post')

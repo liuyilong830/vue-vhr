@@ -10,6 +10,9 @@ const instance = axios.create({
 })
 // 请求拦截器
 instance.interceptors.request.use(config => {
+  if (config.url === '/upload') {
+    config.headers['Content-Type'] = 'multipart/form-data'
+  }
   return config
 }, error => {
   return Promise.reject(error)

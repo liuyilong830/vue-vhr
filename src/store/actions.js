@@ -9,7 +9,8 @@ import {
   GETTASKS,
   TASKSTATUS,
   COMPLETION,
-  ALLCOURSE
+  ALLCOURSE,
+  UPLOADIMG
 } from './mutation-types'
 import {
   reqLogin,
@@ -30,7 +31,10 @@ import {
   reqInsertAtd,
   reqInsertTask,
   reqGetCompletion,
-  reqGetCourse
+  reqGetCourse,
+  reqInsertCourse,
+  reqUpdateCourse,
+  reqUploadImg
 } from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
@@ -126,6 +130,20 @@ export default {
     let result = await reqGetCourse()
     if (result.data) {
       commit(ALLCOURSE, result.data.items)
+    }
+  },
+  async reqUpdateCourse(context, course) {
+    return await reqUpdateCourse(course)
+  },
+  async reqInsertCourse(context, course) {
+    return await reqInsertCourse(course)
+  },
+  async reqUploadImg({ commit }, file) {
+    let param = new FormData()
+    param.append('file', file)
+    let result = await reqUploadImg(param)
+    if (result.data) {
+      commit(UPLOADIMG, result.data.items[0])
     }
   }
 }
