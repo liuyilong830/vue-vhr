@@ -11,7 +11,9 @@ import {
   TASKSTATUS,
   PUSHTASK,
   COMPLETION,
-  ALLCOURSE, UPLOADIMG
+  ALLCOURSE,
+  UPLOADIMG,
+  RESETIMG
 } from './mutation-types'
 export default {
   [SETUSERINFO](state, payload) {
@@ -49,5 +51,8 @@ export default {
   },
   [UPLOADIMG](state, payload) {
     state.imgFile = payload.file
+  },
+  [RESETIMG](state) {
+    state.imgFile = {}
   }
 }

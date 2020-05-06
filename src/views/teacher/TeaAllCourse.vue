@@ -7,11 +7,11 @@
         <div class="flex">
           <h2 class="title">当前选中的课程：{{course.cname? course.cname : '无'}}</h2>
           <el-button-group class="btn-group">
-            <el-button type="primary" :disabled="Object.keys(course).length === 0" @click="modifyCourse">编辑</el-button>
-            <el-button type="primary" v-if="getUserInfo.type === 3" @click="removeCourse">删除</el-button>
+            <el-button type="primary" :disabled="Object.keys(course).length === 0" v-if="getUserInfo.type !== 2" @click="modifyCourse">编辑</el-button>
+            <el-button type="primary" @click="removeCourse" :disabled="Object.keys(course).length === 0" v-if="getUserInfo.type === 3">删除</el-button>
           </el-button-group>
         </div>
-        <div class="flex">  <!--  v-if="getUserInfo.type === 3" -->
+        <div class="flex" v-if="getUserInfo.type === 3">
           <h2 class="title">是否添加新的课程</h2>
           <el-button type="primary" @click="addCourse">添加</el-button>
         </div>
@@ -40,11 +40,12 @@
 </template>
 
 <script>
-  import CourseForm from "../../components/content/course-form/CourseForm";
-  import Card from "../../components/content/card/Card";
+  import CourseForm from "components/content/course-form/CourseForm";
+  import Card from "components/content/card/Card";
   import {mapActions, mapGetters} from 'vuex'
   import {Button, ButtonGroup, Dialog} from "element-ui";
-  import {setMessage} from '../../utils/index'
+  import {setMessage} from 'utils/index'
+  import {RESETIMG} from 'store/mutation-types.js'
   export default {
     name: 'TeaAllCourse',
     components: {
@@ -88,7 +89,7 @@
       }
     },
     methods: {
-      ...mapActions(['reqGetCourse', 'reqInsertCourse', 'reqUpdateCourse']),
+      ...mapActions(['reqGetCourse', 'reqInsertCourse', 'reqUpdateCourse', 'reqDeleteCourse', 'reqDeleteImg']),
       changePlace(event) {
         this.name = event.name
         this.filterCourses = this.courses.filter(course => course.place === this.name)
@@ -107,10 +108,14 @@
       addCourse() {
         this.showAdd = this.showModify = true
       },
-      closeDialog() {
+      // 当关闭对话框时，将数据都清空，同时将保存在vuex中的图片对象也清空
+      async closeDialog() {
         this.showAdd = false
         this.course = {}
+        // 关闭的时候将图片清空
+        this.$store.commit(RESETIMG)
       },
+      // 更新某一个课程
       async sucModify(course) {
         this.showModify = false
         let result = await this.reqUpdateCourse(course)
@@ -118,18 +123,27 @@
           setMessage(result.message, 'success')
           let index = this.courses.findIndex(item => item.id === course.id)
           this.courses.splice(index, 1, course)
+          this.course = {}
         }
       },
-      removeCourse(course) {
-        console.log(course)
+      // 删除一门课程，需要将img的路径传给后台，后台根据路径删除图片，传id用来删除数据库中数据
+      async removeCourse() {
+        console.log(this.course)
+        let result = await this.reqDeleteCourse({id: this.course.id, img: this.course.img})
+        setMessage(result.message, 'success')
+        let index = this.courses.findIndex(item => item.id === this.course.id)
+        this.courses.splice(index, 1)
+        this.course = {}
       },
+      // 新增一门课程，需要将必要的字段传入，并且要将新增的结果中的insertId传递给我
       async insertCourse(course) {
-        console.log(course)
+        let obj = {...course}
         this.showModify = false
-        let result = await this.reqInsertCourse(course)
+        let result = await this.reqInsertCourse(obj)
         if (result.code === 200) {
+          obj.id = result.data.id
           setMessage(result.message, 'success')
-          this.courses.unshift(course)
+          this.courses.unshift(obj)
         }
       }
     },

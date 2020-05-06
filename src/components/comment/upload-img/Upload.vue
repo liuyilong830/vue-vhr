@@ -4,34 +4,35 @@
       <i class="iconfont icon-jia"></i>
       <input type="file" ref="file" class="upload-file">
     </div>
-    <div class="img" v-if="getPath">
-      <img :src="getPath" alt="">
+    <div class="img" v-if="showImg" @mouseenter="onmouseenter" @mouseleave="onmouseleave">
+      <img :src="showImg" alt="">
+      <transition name="delete">
+        <div class="isdelete" v-show="isShow">
+          <i class="iconfont icon-lajitong" @click="deleteImg"></i>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   export default {
     name: 'Upload',
     components: {},
     data() {
-      return {}
-    },
-    props: {
-      imgPath: {
-        type: String,
-        default: ''
+      return {
+        isShow: false
       }
     },
+    props: {
+      img: {
+        type: String,
+        default: ''
+      },
+    },
     computed: {
-      ...mapGetters(['getImgPath']),
-      getPath() {
-        if (Object.keys(this.getImgPath).length !== 0) {
-          let path = this.getImgPath.path.replace('public/', '')
-          return path === '' ? false : `http://localhost:3000/${path}`
-        }
-        return false
+      showImg() {
+        return this.img === ''? false : this.img
       }
     },
     methods: {
@@ -40,6 +41,15 @@
       },
       upLoadImg(event) {
         this.$emit('upLoadImg', event.target.files[0])
+      },
+      deleteImg() {
+        this.$emit('deleteImg')
+      },
+      onmouseenter() {
+        this.isShow = true
+      },
+      onmouseleave() {
+        this.isShow = false
       }
     }
   }
@@ -77,9 +87,11 @@
       }
     }
     .img {
+      position: relative;
       margin-left: 15px;
       width: 120px;
       height: 120px;
+      box-sizing: border-box;
       border: 1px dashed #c0ccda;
       background-color: #ffffff;
       border-radius: 6px;
@@ -90,6 +102,27 @@
       img {
         width: 95%;
       }
+      .isdelete {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0,0,0, .78);
+        top: 0;
+        left: 0;
+        .iconfont {
+          font-size: 30px;
+          color: #ffffffbf;
+        }
+      }
     }
+  }
+  .delete-enter-active, .delete-leave-active {
+    transition: opacity .3s;
+  }
+  .delete-enter, .delete-leave-to {
+    opacity: 0;
   }
 </style>

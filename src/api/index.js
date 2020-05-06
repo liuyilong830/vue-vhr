@@ -52,3 +52,7 @@ export const reqUpdateCourse = (course) => ajax('/updateCou', course, 'post')
 export const reqInsertCourse = (course) => ajax('/insertCou', course, 'post')
 // 上传图片并返回path
 export const reqUploadImg = (file) => ajax('/upload', file, 'post')
+// 删除上传的图片
+export const reqDeleteImg = (filename) => ajax('/deleteImg', {filename}, 'post')
+// 删除某一个课程
+export const reqDeleteCourse = ({id,img}) => ajax('/deleteCou', {id,img}, 'post')

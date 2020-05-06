@@ -8,7 +8,7 @@
         <el-input type="text" v-model="ruleForm.cname"></el-input>
       </el-form-item>
       <el-form-item label="课程图片" prop="img" placeholder="请输入课程名称">
-        <my-upload @upLoadImg="upLoadImg"/>
+        <my-upload @upLoadImg="upLoadImg" @deleteImg="deleteImg" :img="ruleForm.img"></my-upload>
       </el-form-item>
       <el-form-item label="上课地点" prop="place">
         <el-select v-model="ruleForm.place" placeholder="请选择上课地点" style="width: 100%">
@@ -24,6 +24,8 @@
         <el-radio-group v-model="ruleForm.method">
           <el-radio label="机考">机考</el-radio>
           <el-radio label="纸考">纸考</el-radio>
+          <el-radio label="田径场">田径场</el-radio>
+          <el-radio label="网考">网考</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="课程概要" prop="content">
@@ -117,10 +119,10 @@
       }
     },
     computed: {
-      ...mapGetters(['getUserInfo']),
+      ...mapGetters(['getUserInfo', 'getImgPath']),
     },
     methods: {
-      ...mapActions(['reqUploadImg']),
+      ...mapActions(['reqUploadImg', 'reqDeleteImg']),
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -132,17 +134,37 @@
           }
         })
       },
-      resetForm(formName) {
+      async resetForm(formName) {
+        await this.deleteImg()
         this.$refs[formName].resetFields();
       },
-      upLoadImg(file) {
+      // 上传图片，并立即显示
+      async upLoadImg(file) {
+        if (!file) return
+        if (this.ruleForm.img) {
+          await this.deleteImg()
+        }
         this.reqUploadImg(file)
       },
+      // 删除上传的图片
+      async deleteImg() {
+        let filename = this.ruleForm.img.match(/[0-9a-zA-Z]*\.(png|jpg|jpeg)$/i)[0]
+        let result = await this.reqDeleteImg(filename)
+        if (result.code === 200) {
+          this.ruleForm.img = ''
+        }
+      }
     },
     watch: {
       course(val) {
         if (!this.changeType) {
           this.ruleForm = val
+        }
+      },
+      getImgPath(val) {
+        if (Object.keys(this.getImgPath).length !== 0) {
+          let path = this.getImgPath.path.replace('public/', '')
+          return this.ruleForm.img = path === '' ? false : `http://localhost:3000/${path}`
         }
       }
     },

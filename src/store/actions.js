@@ -34,7 +34,9 @@ import {
   reqGetCourse,
   reqInsertCourse,
   reqUpdateCourse,
-  reqUploadImg
+  reqUploadImg,
+  reqDeleteImg,
+  reqDeleteCourse
 } from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
@@ -145,5 +147,11 @@ export default {
     if (result.data) {
       commit(UPLOADIMG, result.data.items[0])
     }
+  },
+  async reqDeleteImg(context, filename) {
+    return await reqDeleteImg(filename)
+  },
+  async reqDeleteCourse(context, payload) {
+    return await reqDeleteCourse(payload)
   }
 }
