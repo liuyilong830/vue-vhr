@@ -13,7 +13,9 @@ import {
   COMPLETION,
   ALLCOURSE,
   UPLOADIMG,
-  RESETIMG
+  RESETIMG,
+  GETGRADES,
+  INSERTGRADE
 } from './mutation-types'
 export default {
   [SETUSERINFO](state, payload) {
@@ -54,5 +56,18 @@ export default {
   },
   [RESETIMG](state) {
     state.imgFile = {}
+  },
+  [GETGRADES](state, grades) {
+    state.grades = grades
+  },
+  [INSERTGRADE](state, grade) {
+    console.log(grade)
+    let obj = state.grades.find(item => item.userid === grade.userid)
+    if (obj) {
+      obj.courses.push(grade)
+    } else {
+      obj = {sname: grade.sname, userid: grade.userid, courses: [grade]}
+      state.grades.push(obj)
+    }
   }
 }

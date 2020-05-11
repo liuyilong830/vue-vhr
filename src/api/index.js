@@ -3,6 +3,7 @@
  */
 import ajax from "./ajax";
 import axios from 'axios'
+import ja from "element-ui/src/locale/lang/ja";
 
 /* loginView */
 // 该请求要求传入一个对象，里面包含登录所需要的所有键值对
@@ -15,6 +16,8 @@ export const reqInsertStu = (user) => ajax('/insertStu', user, 'post')
 export const reqStudents = () => ajax('/stusInfo')
 // 根据userid获取指定学员的信息
 export const reqStuById = (userid) => ajax('/stuById', {userid})
+// 根据sname获取指定学员信息
+export const reqStuBySname = (sname) => ajax('/stuBySname', {sname})
 // 获取当前的天气信息
 export const reqWeather = () => axios({
   url: 'https://tianqiapi.com/free/day',
@@ -56,3 +59,11 @@ export const reqUploadImg = (file) => ajax('/upload', file, 'post')
 export const reqDeleteImg = (filename) => ajax('/deleteImg', {filename}, 'post')
 // 删除某一个课程
 export const reqDeleteCourse = ({id,img}) => ajax('/deleteCou', {id,img}, 'post')
+// 获取所有学生的所有成绩信息
+export const reqGetGrades = () => ajax('/stusgrade')
+// 更新某一个学生的成绩信息
+export const reqUpdateGrade = (grade) => ajax('/updategrade', grade, 'post')
+// 删除所有学生的成绩信息
+export const reqDeleteGrade = () => ajax('/deleteStus', {}, 'post')
+// 新增一名学员的成绩信息
+export const reqInsertGrade = (grade) => ajax('/insertgrade', grade, 'post')

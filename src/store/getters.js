@@ -25,5 +25,8 @@ export default {
   },
   getImgPath(state) {
     return state.imgFile;
+  },
+  getGrades(state) {
+    return state.grades
   }
 }

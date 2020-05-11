@@ -10,7 +10,8 @@ import {
   TASKSTATUS,
   COMPLETION,
   ALLCOURSE,
-  UPLOADIMG
+  UPLOADIMG,
+  GETGRADES
 } from './mutation-types'
 import {
   reqLogin,
@@ -21,6 +22,7 @@ import {
   reqUpdateStu,
   reqDeleteStu,
   reqStuById,
+  reqStuBySname,
   reqGetTeas,
   reqTeaById,
   reqUpdateTea,
@@ -36,7 +38,11 @@ import {
   reqUpdateCourse,
   reqUploadImg,
   reqDeleteImg,
-  reqDeleteCourse
+  reqDeleteCourse,
+  reqGetGrades,
+  reqUpdateGrade,
+  reqDeleteGrade,
+  reqInsertGrade
 } from 'api/index.js'
 export default {
   async reqUserInfo({ commit }, payload) {
@@ -65,6 +71,9 @@ export default {
     if (result.data) {
       commit( GETSELFINFO, result.data.items)
     }
+  },
+  async reqStuBySname ({ commit }, sname) {
+    return await reqStuBySname(sname)
   },
   // 获取天气的api
   async reqWeather({commit}) {
@@ -153,5 +162,20 @@ export default {
   },
   async reqDeleteCourse(context, payload) {
     return await reqDeleteCourse(payload)
+  },
+  async reqGetGrades({ commit }) {
+    let result = await reqGetGrades()
+    if (result.data) {
+      commit(GETGRADES, result.data.items)
+    }
+  },
+  async reqUpdateGrade(context, grade) {
+    return await reqUpdateGrade(grade)
+  },
+  async reqDeleteGrade() {
+    return await reqDeleteGrade()
+  },
+  async reqInsertGrade(context, grade) {
+    return await reqInsertGrade(grade)
   }
 }

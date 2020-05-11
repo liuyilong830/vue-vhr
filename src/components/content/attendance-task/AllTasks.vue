@@ -47,7 +47,7 @@
             :timestamp="`${getTime(task.startTime)} - ${task.tname}`"
             placement="top"
             v-for="task in tasksOther"
-            :key="task.startTime">
+            :key="task.id">
             <el-card :body-style="{ padding: '10px' }">
               <div class="card">
                 <div class="task-title">

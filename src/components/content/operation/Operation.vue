@@ -24,7 +24,6 @@
     <div class="right">
       <el-button-group>
         <el-button type="primary" icon="el-icon-plus" @click.native="createStu" v-if="getUserType">{{getTitle}}</el-button>
-        <el-button type="primary" icon="el-icon-delete" @click.native="spliceStu" v-if="false">回收站</el-button>
       </el-button-group>
     </div>
     <el-dialog

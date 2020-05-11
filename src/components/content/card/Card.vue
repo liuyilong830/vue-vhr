@@ -8,11 +8,9 @@
       <p><span>期考方式：{{course.method}}</span></p>
       <p><span>课程编号：{{course.cno}}</span></p>
     </div>
-    <transition name="describe">
-      <div class="mask" v-show="isShow">
-        <p>{{course.content}}</p>
-      </div>
-    </transition>
+    <div class="mask">
+      <p>{{course.content}}</p>
+    </div>
   </div>
 </template>
 
@@ -21,9 +19,7 @@
     name: 'Card',
     components: {},
     data() {
-      return {
-        isShow: false
-      }
+      return {}
     },
     props: {
       course: {
@@ -35,7 +31,6 @@
     },
     methods: {
       openToDescribe() {
-        this.isShow = !this.isShow
         this.$emit('changeContent', this.course)
       }
     }
@@ -77,13 +72,18 @@
       }
     }
     .mask {
-      background-color: #313131c4;
-      width: 100%;
       position: absolute;
-      bottom: 0px;
+      border-radius: 5px;
+      left: 0;
+      bottom: -150px;
+      width: 100%;
+      min-height: 70px;
+      background-color: rgba(0,0,0, .7);
+      transition: .5s;
+      display: flex;
+      box-sizing: border-box;
+      padding: 10px;
       p {
-        box-sizing: border-box;
-        padding: 0 10px;
         font-size: 15px;
         text-align: justify;
         color: #ffffff;
@@ -94,11 +94,8 @@
         -webkit-box-orient: vertical;
       }
     }
-  }
-  .describe-enter, .describe-leave-to {
-    transform: translateY(100%);
-  }
-  .describe-enter-active, .describe-leave-active {
-    transition: all .3s;
+    &:hover .mask {
+      bottom: 0;
+    }
   }
 </style>

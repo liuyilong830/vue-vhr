@@ -40,13 +40,13 @@
     Drawer,
     Dialog,
   } from 'element-ui'
-  import Calendar from "../../components/comment/calendar/Calendar";
-  import AllTasks from "../../components/content/attendance-task/AllTasks";
-  import ReleaseTasks from "../../components/content/attendance-task/ReleaseTasks";
-  import QueryTask from "../../components/content/attendance-task/QueryTask";
+  import Calendar from "components/comment/calendar/Calendar";
+  import AllTasks from "components/content/attendance-task/AllTasks";
+  import ReleaseTasks from "components/content/attendance-task/ReleaseTasks";
+  import QueryTask from "components/content/attendance-task/QueryTask";
   import {mapActions, mapGetters} from "vuex";
-  import {setMessage} from '../../utils/index'
-  import {PUSHTASK} from '../../store/mutation-types'
+  import {setMessage} from 'utils/index'
+  import {PUSHTASK} from 'store/mutation-types'
   export default {
     name: 'TeaQueryAssessment',
     components: {

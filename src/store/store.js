@@ -17,6 +17,7 @@ const state = {
   attendance_type: {},  // 保存当前任务中已签到和未签到学员的信息
   courses: [],  // 所有的课程信息
   imgFile: {},  // 上传的图片返回的file对象，其中包含path片段地址
+  grades: [],  // 所有学生的信息
 }
 
 export default new Vuex.Store({
