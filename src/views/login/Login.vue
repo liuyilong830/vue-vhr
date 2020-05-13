@@ -29,15 +29,15 @@
             <el-radio :label="1">教师</el-radio>
             <el-radio :label="3">辅导员</el-radio>
           </el-radio-group>
-          <div class="public">
+          <!--<div class="public">
             <el-checkbox v-model="checked">是否记住我</el-checkbox>
-          </div>
+          </div>-->
           <el-row class="public">
             <el-button type="primary" class="length" @click="loginClick">登录</el-button>
           </el-row>
-          <el-row>
+          <!--<el-row>
             <el-button type="info" class="length" @click="loginClick">还未拥有账号，立即注册</el-button>
-          </el-row>
+          </el-row>-->
         </div>
       </div>
     </div>
@@ -57,7 +57,6 @@
     Notification
   } from 'element-ui'
   import {mapActions, mapState} from 'vuex'
-  import {reqLogin} from '../../api/index'
   import {setMessage} from '../../utils/index'
   export default {
     name: 'Login',
@@ -129,10 +128,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image: url("../../assets/img/bg_login2.jpg");
+    background-size: cover;
     .login-box {
       width: 450px;
       border-radius: 10px;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
       .box-top {
         height: 50px;
         display: flex;

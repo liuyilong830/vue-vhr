@@ -67,3 +67,5 @@ export const reqUpdateGrade = (grade) => ajax('/updategrade', grade, 'post')
 export const reqDeleteGrade = () => ajax('/deleteStus', {}, 'post')
 // 新增一名学员的成绩信息
 export const reqInsertGrade = (grade) => ajax('/insertgrade', grade, 'post')
+// 根据userid查询一名学员的成绩信息
+export const reqGetGradeByUserid = (userid) => ajax('/stugrade', {userid})

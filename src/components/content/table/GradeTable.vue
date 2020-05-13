@@ -1,6 +1,6 @@
 <template>
   <div class="grade-table">
-    <el-table :data="gradesData" ref="table" @expand-change="expandChange">
+    <el-table :data="gradesData" ref="table" @expand-change="expandChange" max-height="400" highlight-current-row>
       <el-table-column property="sname" label="姓名" width="200" prop="sname"></el-table-column>
       <el-table-column property="cname" label="课程名称" width="150" prop="cname"></el-table-column>
       <el-table-column property="tname" label="指导老师" prop="tname"></el-table-column>
@@ -129,7 +129,7 @@
       /* 保证每次只展开一行的数据 */
       expandChange(row, expandedRows) {
         if (expandedRows.length !== 1) {
-          let other = this.gradesData.find(item => item.cname !== row.sname)
+          let other = expandedRows.find(item => item.cname !== row.cname)
           this.$refs.table.toggleRowExpansion(other, false)
         }
         this.currentRow = row
