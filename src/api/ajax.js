@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {setMessage} from '../utils/index'
 import router from "../router";
+import {Notification} from "element-ui";
 
 // 创建一个自定义的 axios
 const instance = axios.create({
@@ -20,6 +21,14 @@ instance.interceptors.request.use(config => {
 // 响应拦截器
 instance.interceptors.response.use(response => {
   const result = response.data
+  if (response.config.url == '/login' && result.code === 200) {
+    Notification({
+      title: '登录成功',
+      message: '欢迎进入微人事管理系统',
+      type: 'success'
+    })
+    router.replace('/home')
+  }
   if (result.code === 200) {
     return result
   } else if (result.code === 401) {

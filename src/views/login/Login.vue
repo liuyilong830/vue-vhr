@@ -58,6 +58,7 @@
   } from 'element-ui'
   import {mapActions, mapState} from 'vuex'
   import {setMessage} from '../../utils/index'
+  import router from "../../router";
   export default {
     name: 'Login',
     components: {
@@ -105,12 +106,6 @@
           return this.passwordBlur()
         }
         await this.reqUserInfo({userid: this.userid, password: this.password, type: this.type})
-        this.$router.replace('/home')
-        Notification({
-          title: '登录成功',
-          message: '欢迎进入微人事管理系统',
-          type: 'success'
-        })
       },
       passwordBlur() {
         if(!this.correctPwd) {

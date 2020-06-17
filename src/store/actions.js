@@ -49,7 +49,7 @@ export default {
   // 登录获取用户信息
   async reqUserInfo({ commit }, payload) {
     let result = await reqLogin(payload)
-    if (result.data) {
+    if (result) {
       commit( SETUSERINFO, result.data.items[0])
     }
   },
